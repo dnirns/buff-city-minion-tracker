@@ -70,6 +70,38 @@
   text-decoration: none;
 }
 
+.errorPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+.errorPage h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.errorPage p {
+  color: #888;
+  font-size: 15px;
+}
+
+.homeLink {
+  margin-top: 12px;
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  background: var(--foreground);
+  color: var(--background);
+  text-decoration: none;
+}
+
 @media (prefers-color-scheme: light) {
   .gameLink {
     border-color: #ddd;
