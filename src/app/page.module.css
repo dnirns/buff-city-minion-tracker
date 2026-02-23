@@ -59,15 +59,38 @@
   gap: 8px;
 }
 
-.gameLink {
-  display: block;
-  padding: 12px 16px;
+.gameItem {
+  display: flex;
+  align-items: center;
   border: 1px solid #333;
   border-radius: 8px;
+  overflow: hidden;
+}
+
+.gameLink {
+  display: block;
+  flex: 1;
+  padding: 12px 16px;
   font-size: 15px;
   font-weight: 500;
   color: var(--foreground);
   text-decoration: none;
+}
+
+.deleteButton {
+  padding: 12px 14px;
+  font-size: 18px;
+  line-height: 1;
+  border: none;
+  border-left: 1px solid #333;
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  color: #c04040;
+  background: rgba(192, 64, 64, 0.1);
 }
 
 .errorPage {
@@ -103,7 +126,11 @@
 }
 
 @media (prefers-color-scheme: light) {
-  .gameLink {
+  .gameItem {
     border-color: #ddd;
+  }
+
+  .deleteButton {
+    border-left-color: #ddd;
   }
 }

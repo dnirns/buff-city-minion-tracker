@@ -36,6 +36,13 @@ export function saveGame(gameName: string, slug: string): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
 }
 
+export function deleteGame(slug: string): void {
+  if (typeof window === "undefined") return;
+  const games = getSavedGames().filter((g) => g.slug !== slug);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
+  localStorage.removeItem(`${GAME_STATE_PREFIX}${slug}`);
+}
+
 export function getGameBySlug(slug: string): GameSummary | null {
   return getSavedGames().find((g) => g.slug === slug) ?? null;
 }

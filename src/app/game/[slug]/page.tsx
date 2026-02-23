@@ -37,7 +37,8 @@ type GameAction =
   | { type: "SPAWN_ENEMY"; enemy: Enemy; enemyType: EnemyType }
   | { type: "DEFEAT_ENEMY"; enemyId: string }
   | { type: "UPDATE_STAT"; enemyId: string; stat: "condition" | "energy"; delta: number }
-  | { type: "REROLL_INTENT"; enemyId: string };
+  | { type: "REROLL_INTENT"; enemyId: string }
+  | { type: "REVIVE_ENEMY"; enemyId: string };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
@@ -96,6 +97,14 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           const newIntent = lookupIntent(e.type, rollD12());
           return { ...e, intent: newIntent };
         }),
+      };
+
+    case "REVIVE_ENEMY":
+      return {
+        ...state,
+        enemies: state.enemies.map((e) =>
+          e.id === action.enemyId ? { ...e, defeated: false } : e
+        ),
       };
 
     default:
@@ -201,6 +210,10 @@ export default function GamePage({ params }: GamePageProps) {
 
   const handleDefeat = useCallback((enemyId: string) => {
     dispatch({ type: "DEFEAT_ENEMY", enemyId });
+  }, []);
+
+  const handleRevive = useCallback((enemyId: string) => {
+    dispatch({ type: "REVIVE_ENEMY", enemyId });
   }, []);
 
   const handleRerollIntent = useCallback((enemyId: string) => {
@@ -342,6 +355,7 @@ export default function GamePage({ params }: GamePageProps) {
               onDefeat={handleDefeat}
               onRerollIntent={handleRerollIntent}
               onCommandingOrders={handleCommandingOrders}
+              onRevive={handleRevive}
               spawnPending={pendingSpawn !== null}
             />
           ))}

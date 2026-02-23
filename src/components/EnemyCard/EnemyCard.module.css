@@ -220,12 +220,29 @@
   text-decoration: line-through;
 }
 
+.defeatedRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .defeatedLabel {
   font-size: 12px;
   font-weight: 500;
   color: #c04040;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.reviveButton {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
 }
 
 @media (prefers-color-scheme: light) {
@@ -236,7 +253,8 @@
   .rerollButton,
   .stepperButton,
   .defeatButton,
-  .spawnReinforcementButton {
+  .spawnReinforcementButton,
+  .reviveButton {
     border-color: #ccc;
   }
 

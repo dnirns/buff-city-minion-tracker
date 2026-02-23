@@ -28,6 +28,7 @@ interface EnemyCardProps {
   onDefeat: (enemyId: string) => void;
   onRerollIntent: (enemyId: string) => void;
   onCommandingOrders: (enemyId: string) => void;
+  onRevive: (enemyId: string) => void;
   spawnPending: boolean;
 }
 
@@ -38,6 +39,7 @@ export default function EnemyCard({
   onDefeat,
   onRerollIntent,
   onCommandingOrders,
+  onRevive,
   spawnPending,
 }: EnemyCardProps) {
   const cardClass = enemy.defeated
@@ -62,7 +64,15 @@ export default function EnemyCard({
       </div>
 
       {enemy.defeated ? (
-        <div className={styles.defeatedLabel}>Defeated</div>
+        <div className={styles.defeatedRow}>
+          <span className={styles.defeatedLabel}>Defeated</span>
+          <button
+            className={styles.reviveButton}
+            onClick={() => onRevive(enemy.id)}
+          >
+            Revive
+          </button>
+        </div>
       ) : (
         <>
           <div className={styles.intentRow}>

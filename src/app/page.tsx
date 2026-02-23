@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import NewGameModal from '@/components/NewGameModal/NewGameModal'
-import { getSavedGames, type GameSummary } from '@/lib/gameState'
+import { getSavedGames, deleteGame, type GameSummary } from '@/lib/gameState'
 import styles from './page.module.css'
 
 export default function Home() {
@@ -12,6 +12,12 @@ export default function Home() {
 
   function handleModalClose() {
     setIsModalOpen(false)
+    setSavedGames(getSavedGames())
+  }
+
+  function handleDelete(slug: string, gameName: string) {
+    if (!confirm(`Delete "${gameName}"? This cannot be undone.`)) return
+    deleteGame(slug)
     setSavedGames(getSavedGames())
   }
 
@@ -28,10 +34,17 @@ export default function Home() {
             <h2 className={styles.savedGamesTitle}>Saved Games</h2>
             <ul className={styles.gameList}>
               {savedGames.map((game) => (
-                <li key={game.slug}>
+                <li key={game.slug} className={styles.gameItem}>
                   <Link href={`/game/${game.slug}`} className={styles.gameLink}>
                     {game.gameName}
                   </Link>
+                  <button
+                    className={styles.deleteButton}
+                    onClick={() => handleDelete(game.slug, game.gameName)}
+                    aria-label={`Delete ${game.gameName}`}
+                  >
+                    &times;
+                  </button>
                 </li>
               ))}
             </ul>
