@@ -1,0 +1,97 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 24px;
+}
+
+.sequence {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.rollGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.rollLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.die {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #555;
+  border-radius: 12px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--foreground);
+  background: transparent;
+  font-variant-numeric: tabular-nums;
+}
+
+.die.rolling {
+  animation: tumble 0.1s steps(1) infinite;
+}
+
+.die.landed {
+  border-color: var(--foreground);
+  animation: land 0.3s ease;
+}
+
+.rollResult {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--foreground);
+  min-height: 20px;
+  opacity: 0;
+  animation: fadeIn 0.3s ease 0.1s forwards;
+}
+
+.dieType {
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+}
+
+@keyframes tumble {
+  0% { transform: rotateX(0deg) scale(1); }
+  25% { transform: rotateX(3deg) scale(1.02); }
+  50% { transform: rotateX(-2deg) scale(0.98); }
+  75% { transform: rotateX(1deg) scale(1.01); }
+}
+
+@keyframes land {
+  0% { transform: scale(1.15); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

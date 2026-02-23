@@ -1,6 +1,21 @@
 .page {
   min-height: 100vh;
   padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    max-width: 640px;
+    padding: 32px;
+  }
 }
 
 .header {
@@ -21,6 +36,83 @@
 .header h1 {
   font-size: 20px;
   font-weight: 600;
+}
+
+.turnControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.turnLabel {
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 80px;
+  text-align: center;
+}
+
+.turnButton {
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.turnButton:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.spawnButton {
+  display: block;
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: var(--foreground);
+  color: var(--background);
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.spawnButton:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.spawnFeedback {
+  padding: 10px 14px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+}
+
+.spawnFeedback strong {
+  color: var(--foreground);
+}
+
+.enemyList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 48px 0;
+  color: #888;
+  font-size: 15px;
 }
 
 .main {
@@ -58,4 +150,18 @@
   background: var(--foreground);
   color: var(--background);
   text-decoration: none;
+}
+
+@media (prefers-color-scheme: light) {
+  .header {
+    border-bottom-color: #ddd;
+  }
+
+  .turnButton {
+    border-color: #ccc;
+  }
+
+  .spawnFeedback {
+    border-color: #ddd;
+  }
 }

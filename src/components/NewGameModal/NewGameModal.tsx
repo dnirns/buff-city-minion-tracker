@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, type FormEvent } from "react";
+import { useState, useCallback, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { slugify } from "@/lib/slugify";
 import { saveGame } from "@/lib/gameState";
@@ -14,16 +14,11 @@ interface NewGameModalProps {
 export default function NewGameModal({ isOpen, onClose }: NewGameModalProps) {
   const [gameName, setGameName] = useState("");
   const [error, setError] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    if (isOpen) {
-      inputRef.current?.focus();
-      setGameName("");
-      setError("");
-    }
-  }, [isOpen]);
+  const inputCallbackRef = useCallback((node: HTMLInputElement | null) => {
+    node?.focus();
+  }, []);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -50,7 +45,7 @@ export default function NewGameModal({ isOpen, onClose }: NewGameModalProps) {
         <form onSubmit={handleSubmit}>
           <label htmlFor="gameName">Game Name</label>
           <input
-            ref={inputRef}
+            ref={inputCallbackRef}
             id="gameName"
             type="text"
             value={gameName}
