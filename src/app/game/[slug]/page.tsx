@@ -4,7 +4,7 @@ import { use, useCallback, useEffect, useMemo, useReducer, useRef, useState } fr
 import Link from "next/link";
 import { getGameBySlug, initGameState, saveGameState } from "@/lib/gameState";
 import type { GameState, Enemy, EnemyType, TurnNumber } from "@/lib/types";
-import { performSpawn, createEnemy } from "@/lib/spawner";
+import { performSpawn, performCommandingOrdersSpawn, createEnemy } from "@/lib/spawner";
 import { rollD12 } from "@/lib/dice";
 import { lookupIntent } from "@/lib/intentTable";
 import EnemyCard from "@/components/EnemyCard/EnemyCard";
@@ -207,6 +207,64 @@ export default function GamePage({ params }: GamePageProps) {
     dispatch({ type: "REROLL_INTENT", enemyId });
   }, []);
 
+  const handleCommandingOrders = useCallback(
+    (enemyId: string) => {
+      const source = state.enemies.find((e) => e.id === enemyId);
+      if (!source) return;
+
+      const activeMinionCount = state.enemies.filter(
+        (e) => e.type === "Minion" && !e.defeated
+      ).length;
+
+      const result = performCommandingOrdersSpawn({
+        sourceType: source.type,
+        turn: state.turn,
+        activeMinionCount,
+      });
+
+      if (!result) return;
+
+      const nextNumber = state.enemyNumbers[result.enemyType] + 1;
+      const enemy = createEnemy(result, state.turn, nextNumber);
+
+      const steps: DiceStep[] = result.usedStandardSpawn
+        ? [
+            {
+              label: "Spawn Type",
+              sides: 12,
+              finalValue: result.commandingRoll,
+              resultText: TYPE_DISPLAY[result.enemyType],
+            },
+          ]
+        : [
+            {
+              label: "Reinforcement",
+              sides: 6,
+              finalValue: result.commandingRoll,
+              resultText: TYPE_DISPLAY[result.enemyType],
+            },
+          ];
+
+      steps.push(
+        {
+          label: "Board Edge",
+          sides: 4,
+          finalValue: result.rolls.edgeRoll,
+          resultText: `Edge ${result.edge}`,
+        },
+        {
+          label: "Intent",
+          sides: 12,
+          finalValue: result.rolls.intentRoll,
+          resultText: INTENT_DISPLAY[result.intent],
+        }
+      );
+
+      setPendingSpawn({ result, enemy, steps });
+    },
+    [state.enemies, state.turn, state.enemyNumbers]
+  );
+
   const sortedEnemies = useMemo(() => {
     const active = state.enemies.filter((e) => !e.defeated).reverse();
     const defeated = state.enemies.filter((e) => e.defeated);
@@ -283,6 +341,8 @@ export default function GamePage({ params }: GamePageProps) {
               onUpdateStat={handleUpdateStat}
               onDefeat={handleDefeat}
               onRerollIntent={handleRerollIntent}
+              onCommandingOrders={handleCommandingOrders}
+              spawnPending={pendingSpawn !== null}
             />
           ))}
         </div>

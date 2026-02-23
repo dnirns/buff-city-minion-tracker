@@ -27,6 +27,8 @@ interface EnemyCardProps {
   ) => void;
   onDefeat: (enemyId: string) => void;
   onRerollIntent: (enemyId: string) => void;
+  onCommandingOrders: (enemyId: string) => void;
+  spawnPending: boolean;
 }
 
 export default function EnemyCard({
@@ -35,6 +37,8 @@ export default function EnemyCard({
   onUpdateStat,
   onDefeat,
   onRerollIntent,
+  onCommandingOrders,
+  spawnPending,
 }: EnemyCardProps) {
   const cardClass = enemy.defeated
     ? `${styles.card} ${styles.defeated}`
@@ -85,6 +89,15 @@ export default function EnemyCard({
             </div>
             {behaviour.note && (
               <p className={styles.behaviourNote}>{behaviour.note}</p>
+            )}
+            {enemy.intent === "CommandingOrders" && (
+              <button
+                className={styles.spawnReinforcementButton}
+                disabled={spawnPending}
+                onClick={() => onCommandingOrders(enemy.id)}
+              >
+                Spawn Reinforcement
+              </button>
             )}
             <p className={styles.highGround}>
               High Ground: D6 — 1-2 First Action, 3-6 Jump On then Second Action

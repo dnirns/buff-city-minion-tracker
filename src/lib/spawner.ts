@@ -5,7 +5,7 @@ import type {
   EnemyType,
   Enemy,
 } from "./types";
-import { rollD4, rollD12 } from "./dice";
+import { rollD4, rollD6, rollD12 } from "./dice";
 import { lookupSpawnType } from "./spawnTable";
 import { lookupIntent } from "./intentTable";
 
@@ -76,6 +76,62 @@ export function performSpawn(
     edge: edgeRoll,
     intent,
     rolls: { spawnRoll, edgeRoll, intentRoll },
+  };
+}
+
+export interface CommandingOrdersContext {
+  sourceType: EnemyType;
+  turn: TurnNumber;
+  activeMinionCount: number;
+}
+
+export interface CommandingOrdersResult extends SpawnResult {
+  commandingRoll: number;
+  usedStandardSpawn: boolean;
+}
+
+export function performCommandingOrdersSpawn(
+  context: CommandingOrdersContext,
+  random?: () => number
+): CommandingOrdersResult | null {
+  const isUniqueCitizenNoMinions =
+    context.sourceType === "UniqueCitizen" && context.activeMinionCount === 0;
+
+  if (isUniqueCitizenNoMinions) {
+    // Unique Citizen with no minions in play: use standard spawn table
+    const spawnRoll = rollD12(random);
+    const baseType = lookupSpawnType(context.turn, spawnRoll);
+    if (baseType === null) return null;
+
+    const edgeRoll = rollD4(random) as BoardEdge;
+    const intentRoll = rollD12(random);
+    const intent = lookupIntent(baseType, intentRoll);
+
+    return {
+      enemyType: baseType,
+      edge: edgeRoll,
+      intent,
+      rolls: { spawnRoll, edgeRoll, intentRoll },
+      commandingRoll: spawnRoll,
+      usedStandardSpawn: true,
+    };
+  }
+
+  // Standard commanding orders: D6 determines Minion or Muscle
+  const d6Roll = rollD6(random);
+  const enemyType: EnemyType = d6Roll <= 3 ? "Minion" : "Muscle";
+
+  const edgeRoll = rollD4(random) as BoardEdge;
+  const intentRoll = rollD12(random);
+  const intent = lookupIntent(enemyType, intentRoll);
+
+  return {
+    enemyType,
+    edge: edgeRoll,
+    intent,
+    rolls: { spawnRoll: d6Roll, edgeRoll, intentRoll },
+    commandingRoll: d6Roll,
+    usedStandardSpawn: false,
   };
 }
 

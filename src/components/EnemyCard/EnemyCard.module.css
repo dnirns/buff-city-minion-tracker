@@ -176,6 +176,24 @@
   border-top: 1px dashed #333;
 }
 
+.spawnReinforcementButton {
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #4a9;
+  border-radius: 6px;
+  background: transparent;
+  color: #4a9;
+  cursor: pointer;
+}
+
+.spawnReinforcementButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .defeatButton {
   width: 100%;
   padding: 8px;
@@ -217,7 +235,8 @@
 
   .rerollButton,
   .stepperButton,
-  .defeatButton {
+  .defeatButton,
+  .spawnReinforcementButton {
     border-color: #ccc;
   }
 
