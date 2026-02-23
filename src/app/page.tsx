@@ -1,29 +1,26 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import NewGameModal from "@/components/NewGameModal/NewGameModal";
-import { getSavedGames, type GameSummary } from "@/lib/gameState";
-import styles from "./page.module.css";
+import { useState } from 'react'
+import Link from 'next/link'
+import NewGameModal from '@/components/NewGameModal/NewGameModal'
+import { getSavedGames, type GameSummary } from '@/lib/gameState'
+import styles from './page.module.css'
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [savedGames, setSavedGames] = useState<GameSummary[]>(() => getSavedGames());
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [savedGames, setSavedGames] = useState<GameSummary[]>(() => getSavedGames())
 
   function handleModalClose() {
-    setIsModalOpen(false);
-    setSavedGames(getSavedGames());
+    setIsModalOpen(false)
+    setSavedGames(getSavedGames())
   }
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1 className={styles.title}>Blok City Warz</h1>
+        <h1 className={styles.title}>BUFF CITY BloKWaRZ</h1>
         <p className={styles.subtitle}>Minion Tracker</p>
-        <button
-          className={styles.startButton}
-          onClick={() => setIsModalOpen(true)}
-        >
+        <button className={styles.startButton} onClick={() => setIsModalOpen(true)}>
           Start New Game
         </button>
         {savedGames.length > 0 && (
@@ -41,10 +38,7 @@ export default function Home() {
           </section>
         )}
       </main>
-      <NewGameModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-      />
+      <NewGameModal isOpen={isModalOpen} onClose={handleModalClose} />
     </div>
-  );
+  )
 }
