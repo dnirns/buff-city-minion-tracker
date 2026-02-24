@@ -25,6 +25,7 @@
 }
 
 .typeBadge {
+  font-family: var(--font-tomorrow), Arial, Helvetica, sans-serif;
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;

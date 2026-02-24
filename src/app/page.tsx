@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import NewGameModal from '@/components/NewGameModal/NewGameModal'
 import { getSavedGames, deleteGame, type GameSummary } from '@/lib/gameState'
@@ -8,7 +8,11 @@ import styles from './page.module.css'
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [savedGames, setSavedGames] = useState<GameSummary[]>(() => getSavedGames())
+  const [savedGames, setSavedGames] = useState<GameSummary[]>([])
+
+  useEffect(() => {
+    setSavedGames(getSavedGames())
+  }, [])
 
   function handleModalClose() {
     setIsModalOpen(false)

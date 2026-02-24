@@ -30,6 +30,7 @@
 }
 
 .rollLabel {
+  font-family: var(--font-tomorrow), Arial, Helvetica, sans-serif;
   font-size: 13px;
   font-weight: 500;
   color: #888;
@@ -45,6 +46,7 @@
   justify-content: center;
   border: 2px solid #555;
   border-radius: 12px;
+  font-family: var(--font-tomorrow), Arial, Helvetica, sans-serif;
   font-size: 28px;
   font-weight: 700;
   color: var(--foreground);
@@ -62,6 +64,7 @@
 }
 
 .rollResult {
+  font-family: var(--font-tomorrow), Arial, Helvetica, sans-serif;
   font-size: 14px;
   font-weight: 500;
   color: var(--foreground);
@@ -71,6 +74,7 @@
 }
 
 .dieType {
+  font-family: var(--font-tomorrow), Arial, Helvetica, sans-serif;
   font-size: 11px;
   color: #666;
   margin-top: 2px;
