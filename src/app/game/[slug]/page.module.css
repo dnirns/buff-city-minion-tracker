@@ -151,17 +151,3 @@
   color: var(--background);
   text-decoration: none;
 }
-
-@media (prefers-color-scheme: light) {
-  .header {
-    border-bottom-color: #ddd;
-  }
-
-  .turnButton {
-    border-color: #ccc;
-  }
-
-  .spawnFeedback {
-    border-color: #ddd;
-  }
-}

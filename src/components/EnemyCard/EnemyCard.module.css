@@ -244,26 +244,3 @@
   color: var(--foreground);
   cursor: pointer;
 }
-
-@media (prefers-color-scheme: light) {
-  .card {
-    border-color: #ddd;
-  }
-
-  .rerollButton,
-  .stepperButton,
-  .defeatButton,
-  .spawnReinforcementButton,
-  .reviveButton {
-    border-color: #ccc;
-  }
-
-  .behaviourSection {
-    border-top-color: #ddd;
-  }
-
-  .highGround {
-    border-top-color: #ddd;
-    color: #999;
-  }
-}
