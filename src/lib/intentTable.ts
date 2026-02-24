@@ -6,12 +6,12 @@ interface IntentRange {
 }
 
 const INTENT_TABLE: Record<EnemyType, IntentRange[]> = {
-  Minion: [
+  Goon: [
     { intent: "Combat",          maxRoll: 6  },
     { intent: "Slam",            maxRoll: 9  },
     { intent: "BuffTokenDenial", maxRoll: 12 },
   ],
-  Muscle: [
+  Henchman: [
     { intent: "Combat", maxRoll: 8  },
     { intent: "Slam",   maxRoll: 12 },
   ],

@@ -1,4 +1,4 @@
-export type EnemyType = "Minion" | "Muscle" | "Lieutenant" | "UniqueCitizen";
+export type EnemyType = "Goon" | "Henchman" | "Lieutenant" | "UniqueCitizen";
 
 export type Intent =
   | "Combat"
@@ -34,7 +34,7 @@ export interface GameState {
   slug: string;
   createdAt: number;
   turn: TurnNumber;
-  minionCounter: number;
+  goonCounter: number;
   uniqueCitizenSpawned: boolean;
   enemyNumbers: EnemyNumberCounters;
   enemies: Enemy[];

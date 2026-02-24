@@ -70,10 +70,10 @@ const INTENT_BEHAVIOURS: Record<Intent, IntentBehaviour> = {
     actions: [
       {
         label: "Spawn",
-        detail: "D6: 1-3 spawn Minion, 4-6 spawn Muscle.",
+        detail: "D6: 1-3 spawn Goon, 4-6 spawn Henchman.",
       },
     ],
-    note: "If Unique Citizen and no Minions in play: use Standard Spawn table instead.",
+    note: "If Unique Citizen and no Goons in play: use Standard Spawn table instead.",
   },
 };
 

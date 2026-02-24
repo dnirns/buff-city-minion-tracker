@@ -1,8 +1,8 @@
 import type { EnemyNumberCounters, GameState } from "./types";
 
 const INITIAL_ENEMY_NUMBERS: EnemyNumberCounters = {
-  Minion: 0,
-  Muscle: 0,
+  Goon: 0,
+  Henchman: 0,
   Lieutenant: 0,
   UniqueCitizen: 0,
 };
@@ -75,7 +75,7 @@ export function initGameState(gameName: string, slug: string): GameState {
     slug,
     createdAt: Date.now(),
     turn: 1,
-    minionCounter: 0,
+    goonCounter: 0,
     uniqueCitizenSpawned: false,
     enemyNumbers: { ...INITIAL_ENEMY_NUMBERS },
     enemies: [],

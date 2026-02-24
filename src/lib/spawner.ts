@@ -18,7 +18,7 @@ interface BaseStats {
   damage: number;
 }
 
-const MINION_STATS: BaseStats = {
+const GOON_STATS: BaseStats = {
   strike: 0,
   condition: 6,
   agility: 0,
@@ -37,15 +37,15 @@ const STANDARD_STATS: BaseStats = {
 };
 
 const BASE_STATS: Record<EnemyType, BaseStats> = {
-  Minion: MINION_STATS,
-  Muscle: STANDARD_STATS,
+  Goon: GOON_STATS,
+  Henchman: STANDARD_STATS,
   Lieutenant: STANDARD_STATS,
   UniqueCitizen: STANDARD_STATS,
 };
 
 export interface SpawnContext {
   turn: TurnNumber;
-  minionCounter: number;
+  goonCounter: number;
   uniqueCitizenSpawned: boolean;
 }
 
@@ -59,7 +59,7 @@ export function performSpawn(
 
   let enemyType: EnemyType;
   if (
-    context.minionCounter >= 3 &&
+    context.goonCounter >= 3 &&
     !context.uniqueCitizenSpawned
   ) {
     enemyType = "UniqueCitizen";
@@ -82,7 +82,7 @@ export function performSpawn(
 export interface CommandingOrdersContext {
   sourceType: EnemyType;
   turn: TurnNumber;
-  activeMinionCount: number;
+  activeGoonCount: number;
 }
 
 export interface CommandingOrdersResult extends SpawnResult {
@@ -94,11 +94,11 @@ export function performCommandingOrdersSpawn(
   context: CommandingOrdersContext,
   random?: () => number
 ): CommandingOrdersResult | null {
-  const isUniqueCitizenNoMinions =
-    context.sourceType === "UniqueCitizen" && context.activeMinionCount === 0;
+  const isUniqueCitizenNoGoons =
+    context.sourceType === "UniqueCitizen" && context.activeGoonCount === 0;
 
-  if (isUniqueCitizenNoMinions) {
-    // Unique Citizen with no minions in play: use standard spawn table
+  if (isUniqueCitizenNoGoons) {
+    // Unique Citizen with no goons in play: use standard spawn table
     const spawnRoll = rollD12(random);
     const baseType = lookupSpawnType(context.turn, spawnRoll);
     if (baseType === null) return null;
@@ -117,9 +117,9 @@ export function performCommandingOrdersSpawn(
     };
   }
 
-  // Standard commanding orders: D6 determines Minion or Muscle
+  // Standard commanding orders: D6 determines Goon or Henchman
   const d6Roll = rollD6(random);
-  const enemyType: EnemyType = d6Roll <= 3 ? "Minion" : "Muscle";
+  const enemyType: EnemyType = d6Roll <= 3 ? "Goon" : "Henchman";
 
   const edgeRoll = rollD4(random) as BoardEdge;
   const intentRoll = rollD12(random);

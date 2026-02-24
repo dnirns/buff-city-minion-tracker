@@ -11,8 +11,8 @@ const INTENT_DISPLAY: Record<Intent, string> = {
 };
 
 const TYPE_DISPLAY: Record<string, string> = {
-  Minion: "Minion",
-  Muscle: "Muscle",
+  Goon: "Goon",
+  Henchman: "Henchman",
   Lieutenant: "Lieutenant",
   UniqueCitizen: "Unique Citizen",
 };

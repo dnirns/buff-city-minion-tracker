@@ -24,8 +24,8 @@ const INTENT_DISPLAY: Record<string, string> = {
 };
 
 const TYPE_DISPLAY: Record<string, string> = {
-  Minion: "Minion",
-  Muscle: "Muscle",
+  Goon: "Goon",
+  Henchman: "Henchman",
   Lieutenant: "Lieutenant",
   UniqueCitizen: "Unique Citizen",
 };
@@ -61,13 +61,13 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         [action.enemyType]: state.enemyNumbers[action.enemyType] + 1,
       };
       const isUniqueCitizen = action.enemyType === "UniqueCitizen";
-      const isMinion = action.enemyType === "Minion";
+      const isGoon = action.enemyType === "Goon";
       return {
         ...state,
         enemies: [...state.enemies, action.enemy],
         enemyNumbers: newEnemyNumbers,
         uniqueCitizenSpawned: isUniqueCitizen ? true : state.uniqueCitizenSpawned,
-        minionCounter: isMinion ? state.minionCounter + 1 : state.minionCounter,
+        goonCounter: isGoon ? state.goonCounter + 1 : state.goonCounter,
       };
     }
 
@@ -117,9 +117,9 @@ const INITIAL_STATE: GameState = {
   slug: "",
   createdAt: 0,
   turn: 1,
-  minionCounter: 0,
+  goonCounter: 0,
   uniqueCitizenSpawned: false,
-  enemyNumbers: { Minion: 0, Muscle: 0, Lieutenant: 0, UniqueCitizen: 0 },
+  enemyNumbers: { Goon: 0, Henchman: 0, Lieutenant: 0, UniqueCitizen: 0 },
   enemies: [],
 };
 
@@ -160,7 +160,7 @@ export default function GamePage({ params }: GamePageProps) {
 
     const result = performSpawn({
       turn: state.turn,
-      minionCounter: state.minionCounter,
+      goonCounter: state.goonCounter,
       uniqueCitizenSpawned: state.uniqueCitizenSpawned,
     });
 
@@ -191,7 +191,7 @@ export default function GamePage({ params }: GamePageProps) {
     ];
 
     setPendingSpawn({ result, enemy, steps });
-  }, [state.turn, state.minionCounter, state.uniqueCitizenSpawned, state.enemyNumbers]);
+  }, [state.turn, state.goonCounter, state.uniqueCitizenSpawned, state.enemyNumbers]);
 
   const handleDiceComplete = useCallback(() => {
     if (!pendingSpawn) return;
@@ -225,14 +225,14 @@ export default function GamePage({ params }: GamePageProps) {
       const source = state.enemies.find((e) => e.id === enemyId);
       if (!source) return;
 
-      const activeMinionCount = state.enemies.filter(
-        (e) => e.type === "Minion" && !e.defeated
+      const activeGoonCount = state.enemies.filter(
+        (e) => e.type === "Goon" && !e.defeated
       ).length;
 
       const result = performCommandingOrdersSpawn({
         sourceType: source.type,
         turn: state.turn,
-        activeMinionCount,
+        activeGoonCount,
       });
 
       if (!result) return;
