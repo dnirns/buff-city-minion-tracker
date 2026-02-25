@@ -105,20 +105,6 @@
   gap: 2px;
 }
 
-.ucStatsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px 8px;
-  margin-bottom: 12px;
-}
-
-.ucStatItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
 .statLabel {
   font-size: 10px;
   text-transform: uppercase;

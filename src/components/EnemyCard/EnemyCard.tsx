@@ -210,53 +210,74 @@ export default function EnemyCard({
               </div>
             </>
           ) : (
-            <div className={styles.ucStatsGrid}>
-              {([
-                { label: "STR", stat: "strike" as StatName },
-                { label: "CON", stat: "condition" as StatName },
-                { label: "AGI", stat: "agility" as StatName },
-                { label: "RNG", stat: "range" as StatName },
-                { label: "ENG", stat: "energy" as StatName },
-                { label: "DMG", stat: "damage" as StatName },
-              ]).map(({ label, stat }) => (
-                <div key={stat} className={styles.ucStatItem}>
-                  <span className={styles.statLabel}>{label}</span>
+            <>
+              <div className={styles.staticStatsRow}>
+                {([
+                  { label: "STR", stat: "strike" as StatName },
+                  { label: "AGI", stat: "agility" as StatName },
+                  { label: "RNG", stat: "range" as StatName },
+                  { label: "ENG", stat: "energy" as StatName },
+                  { label: "DMG", stat: "damage" as StatName },
+                ]).map(({ label, stat }) => (
+                  <div key={stat} className={styles.trackerItem}>
+                    <span className={styles.statLabel}>{label}</span>
+                    <div className={styles.statEditable}>
+                      <button
+                        className={styles.stepperButton}
+                        onClick={() => onUpdateStat(enemy.id, stat, -1)}
+                      >
+                        -
+                      </button>
+                      <span className={styles.statValue}>{enemy[stat]}</span>
+                      <button
+                        className={styles.stepperButton}
+                        onClick={() => onUpdateStat(enemy.id, stat, 1)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className={styles.trackersRow}>
+                <div className={styles.trackerItem}>
+                  <span className={styles.statLabel}>CON</span>
                   <div className={styles.statEditable}>
                     <button
                       className={styles.stepperButton}
-                      onClick={() => onUpdateStat(enemy.id, stat, -1)}
+                      onClick={() => onUpdateStat(enemy.id, "condition", -1)}
                     >
                       -
                     </button>
-                    <span className={styles.statValue}>{enemy[stat]}</span>
+                    <span className={styles.statValue}>{enemy.condition}</span>
                     <button
                       className={styles.stepperButton}
-                      onClick={() => onUpdateStat(enemy.id, stat, 1)}
+                      onClick={() => onUpdateStat(enemy.id, "condition", 1)}
                     >
                       +
                     </button>
                   </div>
                 </div>
-              ))}
-              <div className={styles.ucStatItem}>
-                <span className={styles.statLabel}>RDY</span>
-                <div className={styles.statEditable}>
-                  <button
-                    className={styles.stepperButton}
-                    onClick={() => onUpdateStat(enemy.id, "ready", -1)}
-                  >
-                    -
-                  </button>
-                  <span className={styles.statValue}>{enemy.ready}</span>
-                  <button
-                    className={styles.stepperButton}
-                    onClick={() => onUpdateStat(enemy.id, "ready", 1)}
-                  >
-                    +
-                  </button>
+                <div className={styles.trackerItem}>
+                  <span className={styles.statLabel}>RDY</span>
+                  <div className={styles.statEditable}>
+                    <button
+                      className={styles.stepperButton}
+                      onClick={() => onUpdateStat(enemy.id, "ready", -1)}
+                    >
+                      -
+                    </button>
+                    <span className={styles.statValue}>{enemy.ready}</span>
+                    <button
+                      className={styles.stepperButton}
+                      onClick={() => onUpdateStat(enemy.id, "ready", 1)}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </>
           )}
 
           <button
