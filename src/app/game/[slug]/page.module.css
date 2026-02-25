@@ -21,7 +21,7 @@
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   padding-bottom: 16px;
   border-bottom: 1px solid #333;
   margin-bottom: 24px;
@@ -31,6 +31,11 @@
   font-size: 14px;
   color: #888;
   text-decoration: none;
+}
+
+.headerLogo {
+  width: 80px;
+  height: auto;
 }
 
 .header h1 {

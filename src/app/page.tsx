@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import NewGameModal from '@/components/NewGameModal/NewGameModal'
 import Button from '@/components/Button/Button'
@@ -29,7 +30,14 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1 className={styles.title}>BUFF CITY BloKWaRZ</h1>
+        <Image
+          src="/assets/logo-transparent.svg"
+          alt="Buff City BloKWaRZ"
+          width={240}
+          height={240}
+          className={styles.logo}
+          priority
+        />
         <p className={styles.subtitle}>Minion Tracker</p>
         <Button onClick={() => setIsModalOpen(true)}>
           Start New Game

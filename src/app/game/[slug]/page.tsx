@@ -1,6 +1,7 @@
 "use client";
 
 import { use, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { getGameBySlug, initGameState, saveGameState } from "@/lib/gameState";
 import type { GameState, Enemy, EnemyType, TurnNumber } from "@/lib/types";
@@ -371,6 +372,13 @@ export default function GamePage({ params }: GamePageProps) {
         <Link href="/" className={styles.backLink}>
           &larr; Home
         </Link>
+        <Image
+          src="/assets/logo-transparent.svg"
+          alt="Buff City BloKWaRZ"
+          width={48}
+          height={48}
+          className={styles.headerLogo}
+        />
         <h1>{state.gameName}</h1>
       </header>
 
