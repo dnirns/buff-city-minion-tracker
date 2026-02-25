@@ -36,8 +36,9 @@ type GameAction =
   | { type: "RETREAT_TURN" }
   | { type: "SPAWN_ENEMY"; enemy: Enemy; enemyType: EnemyType }
   | { type: "DEFEAT_ENEMY"; enemyId: string }
-  | { type: "UPDATE_STAT"; enemyId: string; stat: "condition" | "energy"; delta: number }
+  | { type: "UPDATE_STAT"; enemyId: string; stat: "strike" | "condition" | "agility" | "range" | "energy" | "damage" | "ready"; delta: number }
   | { type: "REROLL_INTENT"; enemyId: string }
+  | { type: "SET_INTENT"; enemyId: string; intent: import("@/lib/types").Intent }
   | { type: "REVIVE_ENEMY"; enemyId: string };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
@@ -60,14 +61,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ...state.enemyNumbers,
         [action.enemyType]: state.enemyNumbers[action.enemyType] + 1,
       };
-      const isUniqueCitizen = action.enemyType === "UniqueCitizen";
-      const isGoon = action.enemyType === "Goon";
       return {
         ...state,
         enemies: [...state.enemies, action.enemy],
         enemyNumbers: newEnemyNumbers,
-        uniqueCitizenSpawned: isUniqueCitizen ? true : state.uniqueCitizenSpawned,
-        goonCounter: isGoon ? state.goonCounter + 1 : state.goonCounter,
+        uniqueCitizenSpawned: action.enemyType === "UniqueCitizen" ? true : state.uniqueCitizenSpawned,
+        lieutenantSpawned: action.enemyType === "Lieutenant" ? true : state.lieutenantSpawned,
       };
     }
 
@@ -85,7 +84,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         enemies: state.enemies.map((e) => {
           if (e.id !== action.enemyId) return e;
           const newValue = e[action.stat] + action.delta;
-          return { ...e, [action.stat]: Math.max(0, newValue) };
+          const maxValue = action.stat === "ready" ? 6 : Infinity;
+          return { ...e, [action.stat]: Math.min(maxValue, Math.max(0, newValue)) };
         }),
       };
 
@@ -97,6 +97,14 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           const newIntent = lookupIntent(e.type, rollD12());
           return { ...e, intent: newIntent };
         }),
+      };
+
+    case "SET_INTENT":
+      return {
+        ...state,
+        enemies: state.enemies.map((e) =>
+          e.id === action.enemyId ? { ...e, intent: action.intent } : e
+        ),
       };
 
     case "REVIVE_ENEMY":
@@ -117,7 +125,7 @@ const INITIAL_STATE: GameState = {
   slug: "",
   createdAt: 0,
   turn: 1,
-  goonCounter: 0,
+  lieutenantSpawned: false,
   uniqueCitizenSpawned: false,
   enemyNumbers: { Goon: 0, Henchman: 0, Lieutenant: 0, UniqueCitizen: 0 },
   enemies: [],
@@ -143,6 +151,11 @@ export default function GamePage({ params }: GamePageProps) {
     }
   );
   const [pendingSpawn, setPendingSpawn] = useState<PendingSpawn | null>(null);
+  const [pendingReroll, setPendingReroll] = useState<{
+    targetId: string;
+    intent: import("@/lib/types").Intent;
+    steps: DiceStep[];
+  } | null>(null);
   const skipFirstSave = useRef(true);
 
   useEffect(() => {
@@ -160,7 +173,7 @@ export default function GamePage({ params }: GamePageProps) {
 
     const result = performSpawn({
       turn: state.turn,
-      goonCounter: state.goonCounter,
+      lieutenantSpawned: state.lieutenantSpawned,
       uniqueCitizenSpawned: state.uniqueCitizenSpawned,
     });
 
@@ -176,22 +189,26 @@ export default function GamePage({ params }: GamePageProps) {
         finalValue: result.rolls.spawnRoll,
         resultText: TYPE_DISPLAY[result.enemyType],
       },
-      {
+    ];
+
+    if (result.edge !== null) {
+      steps.push({
         label: "Board Edge",
         sides: 4,
         finalValue: result.rolls.edgeRoll,
         resultText: `Edge ${result.edge}`,
-      },
-      {
-        label: "Intent",
-        sides: 12,
-        finalValue: result.rolls.intentRoll,
-        resultText: INTENT_DISPLAY[result.intent],
-      },
-    ];
+      });
+    }
+
+    steps.push({
+      label: "Intent",
+      sides: 12,
+      finalValue: result.rolls.intentRoll,
+      resultText: INTENT_DISPLAY[result.intent],
+    });
 
     setPendingSpawn({ result, enemy, steps });
-  }, [state.turn, state.goonCounter, state.uniqueCitizenSpawned, state.enemyNumbers]);
+  }, [state.turn, state.lieutenantSpawned, state.uniqueCitizenSpawned, state.enemyNumbers]);
 
   const handleDiceComplete = useCallback(() => {
     if (!pendingSpawn) return;
@@ -202,7 +219,7 @@ export default function GamePage({ params }: GamePageProps) {
   }, [pendingSpawn]);
 
   const handleUpdateStat = useCallback(
-    (enemyId: string, stat: "condition" | "energy", delta: number) => {
+    (enemyId: string, stat: "strike" | "condition" | "agility" | "range" | "energy" | "damage" | "ready", delta: number) => {
       dispatch({ type: "UPDATE_STAT", enemyId, stat, delta });
     },
     []
@@ -225,14 +242,14 @@ export default function GamePage({ params }: GamePageProps) {
       const source = state.enemies.find((e) => e.id === enemyId);
       if (!source) return;
 
-      const activeGoonCount = state.enemies.filter(
-        (e) => e.type === "Goon" && !e.defeated
+      const activeNonUCCount = state.enemies.filter(
+        (e) => e.type !== "UniqueCitizen" && !e.defeated
       ).length;
 
       const result = performCommandingOrdersSpawn({
         sourceType: source.type,
         turn: state.turn,
-        activeGoonCount,
+        activeNonUCCount,
       });
 
       if (!result) return;
@@ -277,6 +294,42 @@ export default function GamePage({ params }: GamePageProps) {
     },
     [state.enemies, state.turn, state.enemyNumbers]
   );
+
+  const activeNonUC = useMemo(
+    () =>
+      state.enemies.filter(
+        (e) => e.type !== "UniqueCitizen" && !e.defeated
+      ),
+    [state.enemies]
+  );
+
+  const handleRerollIntentForEnemy = useCallback(
+    (targetId: string) => {
+      const target = state.enemies.find((e) => e.id === targetId);
+      if (!target) return;
+
+      const intentRoll = rollD12();
+      const newIntent = lookupIntent(target.type, intentRoll);
+
+      const steps: DiceStep[] = [
+        {
+          label: `${TYPE_DISPLAY[target.type]} ${target.number} — New Intent`,
+          sides: 12,
+          finalValue: intentRoll,
+          resultText: INTENT_DISPLAY[newIntent],
+        },
+      ];
+
+      setPendingReroll({ targetId, intent: newIntent, steps });
+    },
+    [state.enemies]
+  );
+
+  const handleRerollComplete = useCallback(() => {
+    if (!pendingReroll) return;
+    dispatch({ type: "SET_INTENT", enemyId: pendingReroll.targetId, intent: pendingReroll.intent });
+    setPendingReroll(null);
+  }, [pendingReroll]);
 
   const sortedEnemies = useMemo(() => {
     const active = state.enemies.filter((e) => !e.defeated).reverse();
@@ -340,6 +393,13 @@ export default function GamePage({ params }: GamePageProps) {
         />
       )}
 
+      {pendingReroll && (
+        <DiceRoller
+          steps={pendingReroll.steps}
+          onComplete={handleRerollComplete}
+        />
+      )}
+
       {state.enemies.length === 0 ? (
         <p className={styles.emptyState}>
           No enemies on the board. Activate a Buff Token to spawn.
@@ -355,7 +415,9 @@ export default function GamePage({ params }: GamePageProps) {
               onDefeat={handleDefeat}
               onRerollIntent={handleRerollIntent}
               onCommandingOrders={handleCommandingOrders}
+              onRerollIntentForEnemy={handleRerollIntentForEnemy}
               onRevive={handleRevive}
+              activeNonUC={activeNonUC}
               spawnPending={pendingSpawn !== null}
             />
           ))}

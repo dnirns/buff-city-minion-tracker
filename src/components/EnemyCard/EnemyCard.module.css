@@ -77,14 +77,42 @@
   cursor: pointer;
 }
 
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.staticStatsRow {
+  display: flex;
+  justify-content: space-between;
   gap: 8px;
+  margin-bottom: 8px;
+}
+
+.staticStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.trackersRow {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
   margin-bottom: 12px;
 }
 
-.statItem {
+.trackerItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.ucStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 8px;
+  margin-bottom: 12px;
+}
+
+.ucStatItem {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -175,6 +203,31 @@
   margin: 8px 0 0;
   padding-top: 6px;
   border-top: 1px dashed #333;
+}
+
+.commandingTargets {
+  margin-top: 8px;
+}
+
+.commandingTargetsLabel {
+  font-size: 12px;
+  color: #888;
+  margin: 0 0 6px;
+}
+
+.commandingTargetButton {
+  display: block;
+  width: 100%;
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
 }
 
 .spawnReinforcementButton {

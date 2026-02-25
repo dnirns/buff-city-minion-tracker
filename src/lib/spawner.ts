@@ -22,7 +22,25 @@ const GOON_STATS: BaseStats = {
   strike: 0,
   condition: 6,
   agility: 0,
-  range: 4,
+  range: 5,
+  energy: 6,
+  damage: 0,
+};
+
+const HENCHMAN_STATS: BaseStats = {
+  strike: 0,
+  condition: 8,
+  agility: 4,
+  range: 5,
+  energy: 6,
+  damage: 2,
+};
+
+const LIEUTENANT_STATS: BaseStats = {
+  strike: 2,
+  condition: 6,
+  agility: 2,
+  range: 6,
   energy: 6,
   damage: 0,
 };
@@ -38,14 +56,14 @@ const STANDARD_STATS: BaseStats = {
 
 const BASE_STATS: Record<EnemyType, BaseStats> = {
   Goon: GOON_STATS,
-  Henchman: STANDARD_STATS,
-  Lieutenant: STANDARD_STATS,
+  Henchman: HENCHMAN_STATS,
+  Lieutenant: LIEUTENANT_STATS,
   UniqueCitizen: STANDARD_STATS,
 };
 
 export interface SpawnContext {
   turn: TurnNumber;
-  goonCounter: number;
+  lieutenantSpawned: boolean;
   uniqueCitizenSpawned: boolean;
 }
 
@@ -59,7 +77,7 @@ export function performSpawn(
 
   let enemyType: EnemyType;
   if (
-    context.goonCounter >= 3 &&
+    context.lieutenantSpawned &&
     !context.uniqueCitizenSpawned
   ) {
     enemyType = "UniqueCitizen";
@@ -67,7 +85,8 @@ export function performSpawn(
     enemyType = baseType;
   }
 
-  const edgeRoll = rollD4(random) as BoardEdge;
+  const isUC = enemyType === "UniqueCitizen";
+  const edgeRoll = isUC ? null : (rollD4(random) as BoardEdge);
   const intentRoll = rollD12(random);
   const intent = lookupIntent(enemyType, intentRoll);
 
@@ -75,14 +94,14 @@ export function performSpawn(
     enemyType,
     edge: edgeRoll,
     intent,
-    rolls: { spawnRoll, edgeRoll, intentRoll },
+    rolls: { spawnRoll, edgeRoll: edgeRoll ?? 0, intentRoll },
   };
 }
 
 export interface CommandingOrdersContext {
   sourceType: EnemyType;
   turn: TurnNumber;
-  activeGoonCount: number;
+  activeNonUCCount: number;
 }
 
 export interface CommandingOrdersResult extends SpawnResult {
@@ -94,11 +113,11 @@ export function performCommandingOrdersSpawn(
   context: CommandingOrdersContext,
   random?: () => number
 ): CommandingOrdersResult | null {
-  const isUniqueCitizenNoGoons =
-    context.sourceType === "UniqueCitizen" && context.activeGoonCount === 0;
+  const isUCNoTargets =
+    context.sourceType === "UniqueCitizen" && context.activeNonUCCount === 0;
 
-  if (isUniqueCitizenNoGoons) {
-    // Unique Citizen with no goons in play: use standard spawn table
+  if (isUCNoTargets) {
+    // Unique Citizen with no non-UC enemies in play: use standard spawn table
     const spawnRoll = rollD12(random);
     const baseType = lookupSpawnType(context.turn, spawnRoll);
     if (baseType === null) return null;
@@ -152,6 +171,7 @@ export function createEnemy(result: SpawnResult, turn: TurnNumber, enemyNumber: 
     spawnedOnTurn: turn,
     defeated: false,
     ...stats,
+    ready: 0,
   };
 }
 

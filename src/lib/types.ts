@@ -15,7 +15,7 @@ export interface Enemy {
   id: string;
   type: EnemyType;
   number: number;
-  edge: BoardEdge;
+  edge: BoardEdge | null;
   intent: Intent;
   spawnedOnTurn: TurnNumber;
   defeated: boolean;
@@ -25,6 +25,7 @@ export interface Enemy {
   range: number;
   energy: number;
   damage: number;
+  ready: number;
 }
 
 export type EnemyNumberCounters = Record<EnemyType, number>;
@@ -34,7 +35,7 @@ export interface GameState {
   slug: string;
   createdAt: number;
   turn: TurnNumber;
-  goonCounter: number;
+  lieutenantSpawned: boolean;
   uniqueCitizenSpawned: boolean;
   enemyNumbers: EnemyNumberCounters;
   enemies: Enemy[];
@@ -42,7 +43,7 @@ export interface GameState {
 
 export interface SpawnResult {
   enemyType: EnemyType;
-  edge: BoardEdge;
+  edge: BoardEdge | null;
   intent: Intent;
   rolls: {
     spawnRoll: number;

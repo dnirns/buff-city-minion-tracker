@@ -1,4 +1,4 @@
-import type { Intent } from "./types";
+import type { EnemyType, Intent } from "./types";
 
 export interface ActionStep {
   label: string;
@@ -66,17 +66,41 @@ const INTENT_BEHAVIOURS: Record<Intent, IntentBehaviour> = {
     note: "Unique Citizen only",
   },
   CommandingOrders: {
-    summary: "Spawn reinforcements",
+    summary: "Command or spawn reinforcements",
     actions: [
       {
-        label: "Spawn",
-        detail: "D6: 1-3 spawn Goon, 4-6 spawn Henchman.",
+        label: "1st",
+        detail:
+          "Goon/Henchman in play? Pick one and re-roll their intent. None in play? D6: 1-3 spawn Goon, 4-6 spawn Henchman.",
+      },
+      {
+        label: "2nd",
+        detail:
+          "Spawned a new enemy? Activate them for one action. Re-rolled intent? That enemy activates for one action.",
       },
     ],
-    note: "If Unique Citizen and no Goons in play: use Standard Spawn table instead.",
   },
 };
 
-export function getIntentBehaviour(intent: Intent): IntentBehaviour {
+const UC_COMMANDING_ORDERS: IntentBehaviour = {
+  summary: "Command or spawn reinforcements",
+  actions: [
+    {
+      label: "1st",
+      detail:
+        "Non-UC enemy in play? Pick one and re-roll their intent. None in play? Use Standard Spawn table.",
+    },
+    {
+      label: "2nd",
+      detail:
+        "Spawned a new enemy? Activate them for two actions. Re-rolled intent? That enemy activates for two actions.",
+    },
+  ],
+};
+
+export function getIntentBehaviour(intent: Intent, enemyType?: EnemyType): IntentBehaviour {
+  if (intent === "CommandingOrders" && enemyType === "UniqueCitizen") {
+    return UC_COMMANDING_ORDERS;
+  }
   return INTENT_BEHAVIOURS[intent];
 }

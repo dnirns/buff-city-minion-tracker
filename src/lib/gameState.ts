@@ -75,7 +75,7 @@ export function initGameState(gameName: string, slug: string): GameState {
     slug,
     createdAt: Date.now(),
     turn: 1,
-    goonCounter: 0,
+    lieutenantSpawned: false,
     uniqueCitizenSpawned: false,
     enemyNumbers: { ...INITIAL_ENEMY_NUMBERS },
     enemies: [],
