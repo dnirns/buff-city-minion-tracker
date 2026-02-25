@@ -151,16 +151,8 @@ interface PendingSpawn {
 export default function GamePage({ params }: GamePageProps) {
   const { slug } = use(params);
 
-  const game = useMemo(() => getGameBySlug(slug), [slug]);
-
-  const [state, dispatch] = useReducer(
-    gameReducer,
-    { game, slug },
-    ({ game: g, slug: s }) => {
-      if (!g) return INITIAL_STATE;
-      return initGameState(g.gameName, s);
-    }
-  );
+  const [game, setGame] = useState<ReturnType<typeof getGameBySlug> | undefined>(undefined);
+  const [state, dispatch] = useReducer(gameReducer, INITIAL_STATE);
   const [pendingSpawn, setPendingSpawn] = useState<PendingSpawn | null>(null);
   const [pendingReroll, setPendingReroll] = useState<{
     targetId: string;
@@ -168,6 +160,14 @@ export default function GamePage({ params }: GamePageProps) {
     steps: DiceStep[];
   } | null>(null);
   const skipFirstSave = useRef(true);
+
+  useEffect(() => {
+    const savedGame = getGameBySlug(slug);
+    setGame(savedGame);
+    if (savedGame) {
+      dispatch({ type: "LOAD", state: initGameState(savedGame.gameName, slug) });
+    }
+  }, [slug]);
 
   useEffect(() => {
     if (skipFirstSave.current) {
@@ -352,7 +352,11 @@ export default function GamePage({ params }: GamePageProps) {
     return [...active, ...defeated];
   }, [state.enemies]);
 
-  if (!game) {
+  if (game === undefined) {
+    return <div className={styles.page} />;
+  }
+
+  if (game === null) {
     return (
       <div className={styles.page}>
         <main className={styles.notFound}>
