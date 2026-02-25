@@ -32,19 +32,24 @@
   letter-spacing: 0.5px;
 }
 
-.nameInput {
-  font-family: var(--font-tomorrow), Arial, Helvetica, sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  background: transparent;
-  color: inherit;
+.nameGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.editButton {
+  background: none;
   border: none;
-  border-bottom: 1px solid #888;
-  outline: none;
-  padding: 0 0 2px;
-  max-width: 160px;
+  color: #888;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+}
+
+.editButton:hover {
+  color: var(--foreground);
 }
 
 .topRowRight {
