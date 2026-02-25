@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from "react";
 import type { Enemy, Intent, TurnNumber } from "@/lib/types";
 import { getIntentBehaviour } from "@/lib/intentBehaviour";
 import Button from "@/components/Button/Button";
@@ -11,13 +12,6 @@ const INTENT_DISPLAY: Record<Intent, string> = {
   CommandingOrders: "Commanding Orders",
 };
 
-const TYPE_DISPLAY: Record<string, string> = {
-  Goon: "Goon",
-  Henchman: "Henchman",
-  Lieutenant: "Lieutenant",
-  UniqueCitizen: "Unique Citizen",
-};
-
 type StatName = "strike" | "condition" | "agility" | "range" | "energy" | "damage" | "ready";
 
 interface EnemyCardProps {
@@ -28,6 +22,7 @@ interface EnemyCardProps {
     stat: StatName,
     delta: number
   ) => void;
+  onRename: (enemyId: string, displayName: string) => void;
   onDefeat: (enemyId: string) => void;
   onRerollIntent: (enemyId: string) => void;
   onCommandingOrders: (enemyId: string) => void;
@@ -41,6 +36,7 @@ export default function EnemyCard({
   enemy,
   currentTurn,
   onUpdateStat,
+  onRename,
   onDefeat,
   onRerollIntent,
   onCommandingOrders,
@@ -49,6 +45,27 @@ export default function EnemyCard({
   activeNonUC,
   spawnPending,
 }: EnemyCardProps) {
+  const [editing, setEditing] = useState(false);
+  const [editValue, setEditValue] = useState(enemy.displayName);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editing]);
+
+  const commitRename = () => {
+    const trimmed = editValue.trim();
+    if (trimmed && trimmed !== enemy.displayName) {
+      onRename(enemy.id, trimmed);
+    } else {
+      setEditValue(enemy.displayName);
+    }
+    setEditing(false);
+  };
+
   const cardClass = enemy.defeated
     ? `${styles.card} ${styles.defeated}`
     : styles.card;
@@ -59,9 +76,29 @@ export default function EnemyCard({
   return (
     <div className={cardClass} data-type={enemy.type}>
       <div className={styles.topRow}>
-        <span className={styles.typeBadge}>
-          {TYPE_DISPLAY[enemy.type]} {enemy.number}
-        </span>
+        {editing ? (
+          <input
+            ref={inputRef}
+            className={styles.nameInput}
+            value={editValue}
+            onChange={(e) => setEditValue(e.target.value)}
+            onBlur={commitRename}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") commitRename();
+              if (e.key === "Escape") {
+                setEditValue(enemy.displayName);
+                setEditing(false);
+              }
+            }}
+          />
+        ) : (
+          <span
+            className={styles.typeBadge}
+            onClick={() => setEditing(true)}
+          >
+            {enemy.displayName}
+          </span>
+        )}
         <div className={styles.topRowRight}>
           {justSpawned && (
             <span className={styles.spawnedBadge}>New</span>
@@ -130,7 +167,7 @@ export default function EnemyCard({
                           className={styles.commandingTargetButton}
                           onClick={() => onRerollIntentForEnemy(target.id)}
                         >
-                          {TYPE_DISPLAY[target.type]} {target.number}
+                          {target.displayName}
                         </Button>
                       ))}
                     </div>

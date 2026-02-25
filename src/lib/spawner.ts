@@ -54,6 +54,13 @@ const STANDARD_STATS: BaseStats = {
   damage: 0,
 };
 
+const TYPE_DISPLAY: Record<EnemyType, string> = {
+  Goon: "Goon",
+  Henchman: "Henchman",
+  Lieutenant: "Lieutenant",
+  UniqueCitizen: "Unique Citizen",
+};
+
 const BASE_STATS: Record<EnemyType, BaseStats> = {
   Goon: GOON_STATS,
   Henchman: HENCHMAN_STATS,
@@ -166,6 +173,7 @@ export function createEnemy(result: SpawnResult, turn: TurnNumber, enemyNumber: 
     id: generateId(),
     type: result.enemyType,
     number: enemyNumber,
+    displayName: `${TYPE_DISPLAY[result.enemyType]} ${enemyNumber}`,
     edge: result.edge,
     intent: result.intent,
     spawnedOnTurn: turn,

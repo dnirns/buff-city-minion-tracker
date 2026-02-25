@@ -15,6 +15,7 @@ export interface Enemy {
   id: string;
   type: EnemyType;
   number: number;
+  displayName: string;
   edge: BoardEdge | null;
   intent: Intent;
   spawnedOnTurn: TurnNumber;

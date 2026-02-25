@@ -32,6 +32,21 @@
   letter-spacing: 0.5px;
 }
 
+.nameInput {
+  font-family: var(--font-tomorrow), Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: transparent;
+  color: inherit;
+  border: none;
+  border-bottom: 1px solid #888;
+  outline: none;
+  padding: 0 0 2px;
+  max-width: 160px;
+}
+
 .topRowRight {
   display: flex;
   align-items: center;

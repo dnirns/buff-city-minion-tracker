@@ -40,7 +40,8 @@ type GameAction =
   | { type: "UPDATE_STAT"; enemyId: string; stat: "strike" | "condition" | "agility" | "range" | "energy" | "damage" | "ready"; delta: number }
   | { type: "REROLL_INTENT"; enemyId: string }
   | { type: "SET_INTENT"; enemyId: string; intent: import("@/lib/types").Intent }
-  | { type: "REVIVE_ENEMY"; enemyId: string };
+  | { type: "REVIVE_ENEMY"; enemyId: string }
+  | { type: "RENAME_ENEMY"; enemyId: string; displayName: string };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
@@ -113,6 +114,14 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         enemies: state.enemies.map((e) =>
           e.id === action.enemyId ? { ...e, defeated: false } : e
+        ),
+      };
+
+    case "RENAME_ENEMY":
+      return {
+        ...state,
+        enemies: state.enemies.map((e) =>
+          e.id === action.enemyId ? { ...e, displayName: action.displayName } : e
         ),
       };
 
@@ -234,6 +243,10 @@ export default function GamePage({ params }: GamePageProps) {
     dispatch({ type: "REVIVE_ENEMY", enemyId });
   }, []);
 
+  const handleRename = useCallback((enemyId: string, displayName: string) => {
+    dispatch({ type: "RENAME_ENEMY", enemyId, displayName });
+  }, []);
+
   const handleRerollIntent = useCallback((enemyId: string) => {
     dispatch({ type: "REROLL_INTENT", enemyId });
   }, []);
@@ -314,7 +327,7 @@ export default function GamePage({ params }: GamePageProps) {
 
       const steps: DiceStep[] = [
         {
-          label: `${TYPE_DISPLAY[target.type]} ${target.number} — New Intent`,
+          label: `${target.displayName} — New Intent`,
           sides: 12,
           finalValue: intentRoll,
           resultText: INTENT_DISPLAY[newIntent],
@@ -418,6 +431,7 @@ export default function GamePage({ params }: GamePageProps) {
               onRerollIntent={handleRerollIntent}
               onCommandingOrders={handleCommandingOrders}
               onRerollIntentForEnemy={handleRerollIntentForEnemy}
+              onRename={handleRename}
               onRevive={handleRevive}
               activeNonUC={activeNonUC}
               spawnPending={pendingSpawn !== null}

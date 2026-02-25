@@ -1,4 +1,11 @@
-import type { EnemyNumberCounters, GameState } from "./types";
+import type { EnemyNumberCounters, EnemyType, GameState } from "./types";
+
+const TYPE_DISPLAY: Record<EnemyType, string> = {
+  Goon: "Goon",
+  Henchman: "Henchman",
+  Lieutenant: "Lieutenant",
+  UniqueCitizen: "Unique Citizen",
+};
 
 const INITIAL_ENEMY_NUMBERS: EnemyNumberCounters = {
   Goon: 0,
@@ -69,7 +76,16 @@ export function saveGameState(state: GameState): void {
 
 export function initGameState(gameName: string, slug: string): GameState {
   const existing = getGameState(slug);
-  if (existing) return existing;
+  if (existing) {
+    const needsMigration = existing.enemies.some((e) => !e.displayName);
+    if (needsMigration) {
+      existing.enemies = existing.enemies.map((e) =>
+        e.displayName ? e : { ...e, displayName: `${TYPE_DISPLAY[e.type]} ${e.number}` }
+      );
+      saveGameState(existing);
+    }
+    return existing;
+  }
   const state: GameState = {
     gameName,
     slug,
