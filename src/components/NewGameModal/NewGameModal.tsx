@@ -4,6 +4,7 @@ import { useState, useCallback, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { slugify } from "@/lib/slugify";
 import { saveGame } from "@/lib/gameState";
+import Button from "@/components/Button/Button";
 import styles from "./NewGameModal.module.css";
 
 interface NewGameModalProps {
@@ -56,12 +57,12 @@ export default function NewGameModal({ isOpen, onClose }: NewGameModalProps) {
           />
           {error && <p className={styles.error}>{error}</p>}
           <div className={styles.actions}>
-            <button type="button" onClick={onClose} className={styles.cancelButton}>
+            <Button variant="secondary" type="button" onClick={onClose} className={styles.actionButton}>
               Cancel
-            </button>
-            <button type="submit" className={styles.submitButton}>
+            </Button>
+            <Button type="submit" className={styles.actionButton}>
               Start Game
-            </button>
+            </Button>
           </div>
         </form>
       </div>

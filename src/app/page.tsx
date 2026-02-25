@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import NewGameModal from '@/components/NewGameModal/NewGameModal'
+import Button from '@/components/Button/Button'
 import { getSavedGames, deleteGame, type GameSummary } from '@/lib/gameState'
 import styles from './page.module.css'
 
@@ -30,9 +31,9 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>BUFF CITY BloKWaRZ</h1>
         <p className={styles.subtitle}>Minion Tracker</p>
-        <button className={styles.startButton} onClick={() => setIsModalOpen(true)}>
+        <Button onClick={() => setIsModalOpen(true)}>
           Start New Game
-        </button>
+        </Button>
         {savedGames.length > 0 && (
           <section className={styles.savedGames}>
             <h2 className={styles.savedGamesTitle}>Saved Games</h2>
@@ -42,13 +43,14 @@ export default function Home() {
                   <Link href={`/game/${game.slug}`} className={styles.gameLink}>
                     {game.gameName}
                   </Link>
-                  <button
+                  <Button
+                    variant="icon"
                     className={styles.deleteButton}
                     onClick={() => handleDelete(game.slug, game.gameName)}
                     aria-label={`Delete ${game.gameName}`}
                   >
                     &times;
-                  </button>
+                  </Button>
                 </li>
               ))}
             </ul>

@@ -52,24 +52,6 @@
   margin-top: 20px;
 }
 
-.cancelButton,
-.submitButton {
+.actionButton {
   flex: 1;
-  padding: 10px;
-  font-size: 15px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.cancelButton {
-  background: transparent;
-  border: 1px solid #555;
-  color: var(--foreground);
-}
-
-.submitButton {
-  background: var(--foreground);
-  color: var(--background);
 }

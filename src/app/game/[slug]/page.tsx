@@ -9,6 +9,7 @@ import { rollD12 } from "@/lib/dice";
 import { lookupIntent } from "@/lib/intentTable";
 import EnemyCard from "@/components/EnemyCard/EnemyCard";
 import DiceRoller, { type DiceStep } from "@/components/DiceRoller/DiceRoller";
+import Button from "@/components/Button/Button";
 import styles from "./page.module.css";
 
 interface GamePageProps {
@@ -361,30 +362,31 @@ export default function GamePage({ params }: GamePageProps) {
       </header>
 
       <div className={styles.turnControls}>
-        <button
-          className={styles.turnButton}
+        <Button
+          variant="secondary"
           disabled={state.turn <= 1}
           onClick={() => dispatch({ type: "RETREAT_TURN" })}
         >
           &larr;
-        </button>
+        </Button>
         <span className={styles.turnLabel}>Turn {state.turn}</span>
-        <button
-          className={styles.turnButton}
+        <Button
+          variant="secondary"
           disabled={state.turn >= 10}
           onClick={() => dispatch({ type: "ADVANCE_TURN" })}
         >
           &rarr;
-        </button>
+        </Button>
       </div>
 
-      <button
+      <Button
+        fullWidth
         className={styles.spawnButton}
         disabled={state.turn === 10 || pendingSpawn !== null}
         onClick={handleSpawn}
       >
         {state.turn === 10 ? "No Spawns on Turn 10" : "Activate Buff Token"}
-      </button>
+      </Button>
 
       {pendingSpawn && (
         <DiceRoller

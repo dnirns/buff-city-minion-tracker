@@ -1,5 +1,6 @@
 import type { Enemy, Intent, TurnNumber } from "@/lib/types";
 import { getIntentBehaviour } from "@/lib/intentBehaviour";
+import Button from "@/components/Button/Button";
 import styles from "./EnemyCard.module.css";
 
 const INTENT_DISPLAY: Record<Intent, string> = {
@@ -74,12 +75,13 @@ export default function EnemyCard({
       {enemy.defeated ? (
         <div className={styles.defeatedRow}>
           <span className={styles.defeatedLabel}>Defeated</span>
-          <button
+          <Button
+            variant="success"
             className={styles.reviveButton}
             onClick={() => onRevive(enemy.id)}
           >
             Revive
-          </button>
+          </Button>
         </div>
       ) : (
         <>
@@ -87,12 +89,13 @@ export default function EnemyCard({
             <span className={styles.intentLabel}>
               {INTENT_DISPLAY[enemy.intent]}
             </span>
-            <button
+            <Button
+              variant="secondary"
               className={styles.rerollButton}
               onClick={() => onRerollIntent(enemy.id)}
             >
               Re-roll
-            </button>
+            </Button>
           </div>
 
           <div className={styles.behaviourSection}>
@@ -120,23 +123,26 @@ export default function EnemyCard({
                         Pick an enemy to re-roll intent:
                       </p>
                       {targets.map((target) => (
-                        <button
+                        <Button
                           key={target.id}
+                          variant="secondary"
+                          fullWidth
                           className={styles.commandingTargetButton}
                           onClick={() => onRerollIntentForEnemy(target.id)}
                         >
                           {TYPE_DISPLAY[target.type]} {target.number}
-                        </button>
+                        </Button>
                       ))}
                     </div>
                   ) : (
-                    <button
-                      className={styles.spawnReinforcementButton}
+                    <Button
+                      variant="success"
+                      fullWidth
                       disabled={spawnPending}
                       onClick={() => onCommandingOrders(enemy.id)}
                     >
                       Spawn Reinforcement
-                    </button>
+                    </Button>
                   );
                 })()
               ) : null
@@ -174,37 +180,37 @@ export default function EnemyCard({
                 <div className={styles.trackerItem}>
                   <span className={styles.statLabel}>CON</span>
                   <div className={styles.statEditable}>
-                    <button
-                      className={styles.stepperButton}
+                    <Button
+                      variant="stepper"
                       onClick={() => onUpdateStat(enemy.id, "condition", -1)}
                     >
                       -
-                    </button>
+                    </Button>
                     <span className={styles.statValue}>{enemy.condition}</span>
-                    <button
-                      className={styles.stepperButton}
+                    <Button
+                      variant="stepper"
                       onClick={() => onUpdateStat(enemy.id, "condition", 1)}
                     >
                       +
-                    </button>
+                    </Button>
                   </div>
                 </div>
                 <div className={styles.trackerItem}>
                   <span className={styles.statLabel}>RDY</span>
                   <div className={styles.statEditable}>
-                    <button
-                      className={styles.stepperButton}
+                    <Button
+                      variant="stepper"
                       onClick={() => onUpdateStat(enemy.id, "ready", -1)}
                     >
                       -
-                    </button>
+                    </Button>
                     <span className={styles.statValue}>{enemy.ready}</span>
-                    <button
-                      className={styles.stepperButton}
+                    <Button
+                      variant="stepper"
                       onClick={() => onUpdateStat(enemy.id, "ready", 1)}
                     >
                       +
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -222,19 +228,19 @@ export default function EnemyCard({
                   <div key={stat} className={styles.trackerItem}>
                     <span className={styles.statLabel}>{label}</span>
                     <div className={styles.statEditable}>
-                      <button
-                        className={styles.stepperButton}
+                      <Button
+                        variant="stepper"
                         onClick={() => onUpdateStat(enemy.id, stat, -1)}
                       >
                         -
-                      </button>
+                      </Button>
                       <span className={styles.statValue}>{enemy[stat]}</span>
-                      <button
-                        className={styles.stepperButton}
+                      <Button
+                        variant="stepper"
                         onClick={() => onUpdateStat(enemy.id, stat, 1)}
                       >
                         +
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -243,49 +249,50 @@ export default function EnemyCard({
                 <div className={styles.trackerItem}>
                   <span className={styles.statLabel}>CON</span>
                   <div className={styles.statEditable}>
-                    <button
-                      className={styles.stepperButton}
+                    <Button
+                      variant="stepper"
                       onClick={() => onUpdateStat(enemy.id, "condition", -1)}
                     >
                       -
-                    </button>
+                    </Button>
                     <span className={styles.statValue}>{enemy.condition}</span>
-                    <button
-                      className={styles.stepperButton}
+                    <Button
+                      variant="stepper"
                       onClick={() => onUpdateStat(enemy.id, "condition", 1)}
                     >
                       +
-                    </button>
+                    </Button>
                   </div>
                 </div>
                 <div className={styles.trackerItem}>
                   <span className={styles.statLabel}>RDY</span>
                   <div className={styles.statEditable}>
-                    <button
-                      className={styles.stepperButton}
+                    <Button
+                      variant="stepper"
                       onClick={() => onUpdateStat(enemy.id, "ready", -1)}
                     >
                       -
-                    </button>
+                    </Button>
                     <span className={styles.statValue}>{enemy.ready}</span>
-                    <button
-                      className={styles.stepperButton}
+                    <Button
+                      variant="stepper"
                       onClick={() => onUpdateStat(enemy.id, "ready", 1)}
                     >
                       +
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
             </>
           )}
 
-          <button
-            className={styles.defeatButton}
+          <Button
+            variant="danger"
+            fullWidth
             onClick={() => onDefeat(enemy.id)}
           >
             Defeated
-          </button>
+          </Button>
         </>
       )}
     </div>

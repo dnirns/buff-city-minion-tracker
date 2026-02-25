@@ -53,40 +53,9 @@
   text-align: center;
 }
 
-.turnButton {
-  padding: 6px 14px;
-  font-size: 14px;
-  font-weight: 500;
-  border: 1px solid #555;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--foreground);
-  cursor: pointer;
-}
-
-.turnButton:disabled {
-  opacity: 0.3;
-  cursor: default;
-}
-
 .spawnButton {
-  display: block;
-  width: 100%;
-  padding: 14px 24px;
   font-family: var(--font-tomorrow), Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  background: var(--foreground);
-  color: var(--background);
-  cursor: pointer;
   margin-bottom: 20px;
-}
-
-.spawnButton:disabled {
-  opacity: 0.3;
-  cursor: default;
 }
 
 .spawnFeedback {

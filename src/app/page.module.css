@@ -26,17 +26,6 @@
   margin-bottom: 32px;
 }
 
-.startButton {
-  padding: 14px 32px;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  background: var(--foreground);
-  color: var(--background);
-  cursor: pointer;
-}
-
 .savedGames {
   margin-top: 40px;
   width: 100%;
@@ -78,19 +67,8 @@
 }
 
 .deleteButton {
-  padding: 12px 14px;
-  font-size: 18px;
-  line-height: 1;
-  border: none;
   border-left: 1px solid #333;
-  background: transparent;
-  color: #888;
-  cursor: pointer;
-}
-
-.deleteButton:hover {
-  color: #c04040;
-  background: rgba(192, 64, 64, 0.1);
+  border-radius: 0;
 }
 
 .errorPage {
