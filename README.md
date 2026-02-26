@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Buff This – Minion Tracker
+
+A companion web application for generating and managing NPC "minion" enemies during games of **Buff This – Blok Warz**, a tabletop miniatures game created by [Macharian Rising](https://protagonist-games.itch.io/blokwarz).
+
+This tool automates the dice-driven spawning logic for Goons, Henchmen, Lieutenants, and the Unique Citizen, letting you focus on playing the game rather than juggling rulebook tables and tracking stats on paper.
+
+> **Note:** This is an unofficial fan-made tool. Buff This – Blok Warz is designed and published by Macharian Rising / Protagonist Games.
+
+## What It Does
+
+When a Buff Token is activated during a game, the app rolls virtual dice against the official spawn tables to determine the enemy type (based on the current turn), board edge deployment, and combat intent. Each spawned enemy is rendered as an interactive card displaying its S.C.A.R.E.D. stats (Strike, Condition, Agility, Range, Energy, Damage) along with a Ready tracker. Stats can be adjusted on the fly as the game progresses, and defeated enemies can be removed from the active board.
+
+The app also handles the more complex spawning edge cases from the rulebook, including the Unique Citizen trigger (which spawns on the first Buff Token activation after any Lieutenant has appeared), Commanding Orders intent chains, and Turn 10's "no spawn" rule.
+
+## Technical Overview
+
+The project is built with **Next.js 16** (App Router) using **React 19** and **TypeScript**. There is no backend or database; all game state is persisted to the browser's `localStorage`, making it entirely client-side. Styling is handled through **CSS Modules** scoped to individual components.
+
+The core game logic lives in `src/lib/` and is separated into small, testable modules:
+
+- **`dice.ts`** – D4, D6, and D12 roll utilities.
+- **`spawnTable.ts`** – The turn-based spawn matrix lookup.
+- **`intentTable.ts`** – Intent determination per enemy type.
+- **`spawner.ts`** – Orchestrates the full spawn flow, including Commanding Orders and Unique Citizen logic.
+- **`gameState.ts`** – Handles saving and loading game sessions from `localStorage`.
+
+The UI is composed of React components in `src/components/`, each with its own CSS Module for styling. The main game page (`src/app/game/[slug]/page.tsx`) uses a `useReducer` pattern to manage game state, supporting actions such as spawning enemies, adjusting stats, advancing turns, and defeating minions.
+
+### Testing
+
+Unit tests are written with **Vitest** and **React Testing Library**, covering the core spawning logic and component behaviour. End-to-end tests use **Cypress**.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- **Node.js** (v18 or later)
+- **npm** (or yarn/pnpm)
+
+### Installation
+
+```bash
+git clone <repository-url>
+cd buff-this-minion-tracker
+npm install
+```
+
+### Running the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Running Tests
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Unit tests
+npm test
 
-## Learn More
+# Unit tests in watch mode
+npm run test:watch
 
-To learn more about Next.js, take a look at the following resources:
+# End-to-end tests (headless)
+npm run test:e2e
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# End-to-end tests (interactive)
+npm run test:e2e:open
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Production Build
 
-## Deploy on Vercel
+```bash
+npm run build
+npm start
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Licence
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is released under the MIT licence.
