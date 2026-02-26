@@ -25,7 +25,11 @@
   align-items: center;
   gap: 8px;
   opacity: 0;
-  transform: translateY(12px);
+  visibility: hidden;
+}
+
+.rollGroupVisible {
+  visibility: visible;
   animation: fadeIn 0.3s ease forwards;
 }
 
@@ -83,6 +87,9 @@
   color: var(--foreground);
   min-height: 20px;
   opacity: 0;
+}
+
+.rollResultVisible {
   animation: fadeIn 0.3s ease 0.1s forwards;
 }
 

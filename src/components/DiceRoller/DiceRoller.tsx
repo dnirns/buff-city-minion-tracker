@@ -285,6 +285,14 @@ function DieWithNumber({
   onLanded?: () => void;
 }) {
   const [dieLanded, setDieLanded] = useState(!rolling);
+  const [prevRolling, setPrevRolling] = useState(rolling);
+
+  if (rolling !== prevRolling) {
+    setPrevRolling(rolling);
+    if (rolling) {
+      setDieLanded(false);
+    }
+  }
 
   useEffect(() => {
     if (!rolling) return;
@@ -353,25 +361,29 @@ export default function DiceRoller({ steps, onComplete }: DiceRollerProps) {
   return (
     <div className={styles.overlay}>
       <div className={styles.sequence}>
-        {steps.slice(0, activeStep + 1).map((step, i) => (
-          <div
-            key={i}
-            className={styles.rollGroup}
-            style={{ animationDelay: `${i === activeStep ? 0 : 0}ms` }}
-          >
-            <span className={styles.rollLabel}>{step.label}</span>
-            <DieWithNumber
-              sides={step.sides}
-              finalValue={step.finalValue}
-              rolling={i === activeStep && !completedSteps.has(i)}
-              onLanded={() => handleLanded(i)}
-            />
-            <span className={styles.dieType}>D{step.sides}</span>
-            {completedSteps.has(i) && (
-              <span className={styles.rollResult}>{step.resultText}</span>
-            )}
-          </div>
-        ))}
+        {steps.map((step, i) => {
+          const isVisible = i <= activeStep;
+          return (
+            <div
+              key={i}
+              className={`${styles.rollGroup} ${isVisible ? styles.rollGroupVisible : ""}`}
+            >
+              <span className={styles.rollLabel}>{step.label}</span>
+              <DieWithNumber
+                sides={step.sides}
+                finalValue={step.finalValue}
+                rolling={isVisible && i === activeStep && !completedSteps.has(i)}
+                onLanded={() => handleLanded(i)}
+              />
+              <span className={styles.dieType}>D{step.sides}</span>
+              <span
+                className={`${styles.rollResult} ${completedSteps.has(i) ? styles.rollResultVisible : ""}`}
+              >
+                {completedSteps.has(i) ? step.resultText : "\u00A0"}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
