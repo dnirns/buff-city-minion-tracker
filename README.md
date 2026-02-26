@@ -2,6 +2,10 @@
 
 A companion web application for generating and managing NPC "minion" enemies during games of **Buff This – Blok Warz**, a tabletop miniatures game created by [Macharian Rising](https://protagonist-games.itch.io/blokwarz).
 
+The app is deployed on Vercel here:
+
+https://blok-warz-minion-tracker.vercel.app/
+
 This tool automates the dice-driven spawning logic for Goons, Henchmen, Lieutenants, and the Unique Citizen, letting you focus on playing the game rather than juggling rulebook tables and tracking stats on paper.
 
 > **Note:** This is an unofficial fan-made tool. Buff This – Blok Warz is designed and published by Macharian Rising / Protagonist Games.
