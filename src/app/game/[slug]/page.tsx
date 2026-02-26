@@ -4,7 +4,7 @@ import { use, useCallback, useEffect, useMemo, useReducer, useRef, useState } fr
 import Image from 'next/image'
 import Link from 'next/link'
 import { getGameBySlug, initGameState, saveGameState } from '@/lib/gameState'
-import type { GameState, Enemy, EnemyType, TurnNumber } from '@/lib/types'
+import type { Enemy } from '@/lib/types'
 import { performSpawn, performCommandingOrdersSpawn, createEnemy } from '@/lib/spawner'
 import { rollD12 } from '@/lib/dice'
 import { lookupIntent } from '@/lib/intentTable'
@@ -12,118 +12,12 @@ import EnemyCard from '@/components/EnemyCard/EnemyCard'
 import DiceRoller, { type DiceStep } from '@/components/DiceRoller/DiceRoller'
 import Button from '@/components/Button/Button'
 import DefeatAnimation from '@/components/DefeatAnimation/DefeatAnimation'
-import { TYPE_DISPLAY, INTENT_DISPLAY, INITIAL_ENEMY_NUMBERS, MAX_TURN } from '@/lib/constants'
+import { TYPE_DISPLAY, INTENT_DISPLAY, MAX_TURN } from '@/lib/constants'
+import { gameReducer, INITIAL_STATE } from '@/lib/gameReducer'
 import styles from './page.module.css'
 
 interface GamePageProps {
   params: Promise<{ slug: string }>
-}
-
-type GameAction =
-  | { type: 'LOAD'; state: GameState }
-  | { type: 'ADVANCE_TURN' }
-  | { type: 'RETREAT_TURN' }
-  | { type: 'SPAWN_ENEMY'; enemy: Enemy; enemyType: EnemyType }
-  | { type: 'DEFEAT_ENEMY'; enemyId: string }
-  | {
-      type: 'UPDATE_STAT'
-      enemyId: string
-      stat: 'strike' | 'condition' | 'agility' | 'range' | 'energy' | 'damage' | 'ready'
-      delta: number
-    }
-  | { type: 'REROLL_INTENT'; enemyId: string }
-  | { type: 'SET_INTENT'; enemyId: string; intent: import('@/lib/types').Intent }
-  | { type: 'REVIVE_ENEMY'; enemyId: string }
-  | { type: 'RENAME_ENEMY'; enemyId: string; displayName: string }
-
-function gameReducer(state: GameState, action: GameAction): GameState {
-  switch (action.type) {
-    case 'LOAD':
-      return action.state
-
-    case 'ADVANCE_TURN': {
-      if (state.turn >= MAX_TURN) return state
-      return { ...state, turn: (state.turn + 1) as TurnNumber }
-    }
-
-    case 'RETREAT_TURN': {
-      if (state.turn <= 1) return state
-      return { ...state, turn: (state.turn - 1) as TurnNumber }
-    }
-
-    case 'SPAWN_ENEMY': {
-      const newEnemyNumbers = {
-        ...state.enemyNumbers,
-        [action.enemyType]: state.enemyNumbers[action.enemyType] + 1,
-      }
-      return {
-        ...state,
-        enemies: [...state.enemies, action.enemy],
-        enemyNumbers: newEnemyNumbers,
-        uniqueCitizenSpawned: action.enemyType === 'UniqueCitizen' ? true : state.uniqueCitizenSpawned,
-        lieutenantSpawned: action.enemyType === 'Lieutenant' ? true : state.lieutenantSpawned,
-      }
-    }
-
-    case 'DEFEAT_ENEMY':
-      return {
-        ...state,
-        enemies: state.enemies.map((e) => (e.id === action.enemyId ? { ...e, defeated: true } : e)),
-      }
-
-    case 'UPDATE_STAT':
-      return {
-        ...state,
-        enemies: state.enemies.map((e) => {
-          if (e.id !== action.enemyId) return e
-          const newValue = e[action.stat] + action.delta
-          const maxValue = action.stat === 'ready' ? 6 : Infinity
-          return { ...e, [action.stat]: Math.min(maxValue, Math.max(0, newValue)) }
-        }),
-      }
-
-    case 'REROLL_INTENT':
-      return {
-        ...state,
-        enemies: state.enemies.map((e) => {
-          if (e.id !== action.enemyId) return e
-          const newIntent = lookupIntent(e.type, rollD12())
-          return { ...e, intent: newIntent }
-        }),
-      }
-
-    case 'SET_INTENT':
-      return {
-        ...state,
-        enemies: state.enemies.map((e) => (e.id === action.enemyId ? { ...e, intent: action.intent } : e)),
-      }
-
-    case 'REVIVE_ENEMY':
-      return {
-        ...state,
-        enemies: state.enemies.map((e) => (e.id === action.enemyId ? { ...e, defeated: false } : e)),
-      }
-
-    case 'RENAME_ENEMY':
-      return {
-        ...state,
-        enemies: state.enemies.map((e) => (e.id === action.enemyId ? { ...e, displayName: action.displayName } : e)),
-      }
-
-    default:
-      return state
-  }
-}
-
-const INITIAL_STATE: GameState = {
-  gameName: '',
-  slug: '',
-  createdAt: 0,
-  turn: 1,
-  lieutenantSpawned: false,
-  uniqueCitizenSpawned: false,
-  enemyNumbers: { ...INITIAL_ENEMY_NUMBERS },
-  enemies: [],
 }
 
 interface PendingSpawn {
