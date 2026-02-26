@@ -1,4 +1,4 @@
-# Buff This – Minion Tracker
+# Buff City - Blok Warz – Minion Tracker
 
 A companion web application for generating and managing NPC "minion" enemies during games of **Buff This – Blok Warz**, a tabletop miniatures game created by [Macharian Rising](https://protagonist-games.itch.io/blokwarz).
 
