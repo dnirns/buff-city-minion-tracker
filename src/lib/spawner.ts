@@ -68,10 +68,10 @@ export interface SpawnContext {
   uniqueCitizenSpawned: boolean;
 }
 
-export function performSpawn(
+export const performSpawn = (
   context: SpawnContext,
   random?: () => number
-): SpawnResult | null {
+): SpawnResult | null => {
   const spawnRoll = rollD12(random);
   const baseType = lookupSpawnType(context.turn, spawnRoll);
   if (baseType === null) return null;
@@ -97,7 +97,7 @@ export function performSpawn(
     intent,
     rolls: { spawnRoll, edgeRoll: edgeRoll ?? 0, intentRoll },
   };
-}
+};
 
 export interface CommandingOrdersContext {
   sourceType: EnemyType;
@@ -110,10 +110,10 @@ export interface CommandingOrdersResult extends SpawnResult {
   usedStandardSpawn: boolean;
 }
 
-export function performCommandingOrdersSpawn(
+export const performCommandingOrdersSpawn = (
   context: CommandingOrdersContext,
   random?: () => number
-): CommandingOrdersResult | null {
+): CommandingOrdersResult | null => {
   const isUCNoTargets =
     context.sourceType === "UniqueCitizen" && context.activeNonUCCount === 0;
 
@@ -153,15 +153,15 @@ export function performCommandingOrdersSpawn(
     commandingRoll: d6Roll,
     usedStandardSpawn: false,
   };
-}
+};
 
 let nextId = 0;
 
-export function generateId(): string {
+export const generateId = (): string => {
   return `enemy-${Date.now()}-${nextId++}`;
-}
+};
 
-export function createEnemy(result: SpawnResult, turn: TurnNumber, enemyNumber: number): Enemy {
+export const createEnemy = (result: SpawnResult, turn: TurnNumber, enemyNumber: number): Enemy => {
   const stats = BASE_STATS[result.enemyType];
   return {
     id: generateId(),
@@ -175,8 +175,8 @@ export function createEnemy(result: SpawnResult, turn: TurnNumber, enemyNumber: 
     ...stats,
     ready: 0,
   };
-}
+};
 
-export function getBaseStats(type: EnemyType): BaseStats {
+export const getBaseStats = (type: EnemyType): BaseStats => {
   return BASE_STATS[type];
-}
+};

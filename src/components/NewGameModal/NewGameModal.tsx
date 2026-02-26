@@ -12,7 +12,7 @@ interface NewGameModalProps {
   onClose: () => void;
 }
 
-export default function NewGameModal({ isOpen, onClose }: NewGameModalProps) {
+const NewGameModal = ({ isOpen, onClose }: NewGameModalProps) => {
   const [gameName, setGameName] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function NewGameModal({ isOpen, onClose }: NewGameModalProps) {
     node?.focus();
   }, []);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const trimmed = gameName.trim();
     if (!trimmed) {
@@ -35,7 +35,7 @@ export default function NewGameModal({ isOpen, onClose }: NewGameModalProps) {
     }
     saveGame(trimmed, slug);
     router.push(`/game/${slug}`);
-  }
+  };
 
   if (!isOpen) return null;
 
@@ -68,4 +68,6 @@ export default function NewGameModal({ isOpen, onClose }: NewGameModalProps) {
       </div>
     </div>
   );
-}
+};
+
+export default NewGameModal;

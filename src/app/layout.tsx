@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   description: "Automate minion spawning and stat tracking for Blok City Warz",
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <html lang="en">
       <body className={`${tomorrow.variable} ${googleSansCode.variable}`}>
@@ -30,4 +30,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

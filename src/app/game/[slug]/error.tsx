@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import styles from './page.module.css'
 
-export default function GameError() {
+const GameError = () => {
   return (
     <div className={styles.page}>
       <main className={styles.notFound}>
@@ -16,3 +16,5 @@ export default function GameError() {
     </div>
   )
 }
+
+export default GameError

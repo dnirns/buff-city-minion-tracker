@@ -28,13 +28,13 @@ const INTENT_TABLE: Record<EnemyType, IntentRange[]> = {
   ],
 };
 
-export function lookupIntent(
+export const lookupIntent = (
   enemyType: EnemyType,
   d12Roll: number
-): Intent {
+): Intent => {
   const ranges = INTENT_TABLE[enemyType];
   for (const range of ranges) {
     if (d12Roll <= range.maxRoll) return range.intent;
   }
   return ranges[ranges.length - 1].intent;
-}
+};

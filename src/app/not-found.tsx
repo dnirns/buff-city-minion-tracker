@@ -1,7 +1,7 @@
 import Link from "next/link";
 import styles from "./page.module.css";
 
-export default function NotFound() {
+const NotFound = () => {
   return (
     <div className={styles.errorPage}>
       <h1>Page not found</h1>
@@ -11,4 +11,6 @@ export default function NotFound() {
       </Link>
     </div>
   );
-}
+};
+
+export default NotFound;

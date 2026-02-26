@@ -22,7 +22,7 @@ const ROLL_DURATION = 1000;
 const LAND_DURATION = 200; // matches slerp completion (dur * 0.4)
 const PAUSE_BETWEEN = 600;
 
-function getFaceNormals(geometry: THREE.BufferGeometry): THREE.Vector3[] {
+const getFaceNormals = (geometry: THREE.BufferGeometry): THREE.Vector3[] => {
   if (!geometry.getAttribute("normal")) {
     geometry.computeVertexNormals();
   }
@@ -42,12 +42,12 @@ function getFaceNormals(geometry: THREE.BufferGeometry): THREE.Vector3[] {
   }
 
   return Array.from(seen.values());
-}
+};
 
-function alignFlatBottom(
+const alignFlatBottom = (
   baseQuat: THREE.Quaternion,
   geometry: THREE.BufferGeometry
-): THREE.Quaternion {
+): THREE.Quaternion => {
   const pos = geometry.getAttribute("position");
 
   // Transform and deduplicate vertices
@@ -115,9 +115,9 @@ function alignFlatBottom(
   }
 
   return baseQuat;
-}
+};
 
-function Die3D({
+const Die3D = ({
   sides,
   rolling,
   onLanded,
@@ -125,7 +125,7 @@ function Die3D({
   sides: number;
   rolling: boolean;
   onLanded?: () => void;
-}) {
+}) => {
   const groupRef = useRef<THREE.Group>(null);
   const phaseRef = useRef<"rolling" | "landing" | "static">(
     rolling ? "rolling" : "static"
@@ -226,9 +226,9 @@ function Die3D({
       </mesh>
     </group>
   );
-}
+};
 
-function RollingNumber({
+const RollingNumber = ({
   sides,
   finalValue,
   landed,
@@ -238,7 +238,7 @@ function RollingNumber({
   finalValue: number;
   landed: boolean;
   onSettled: () => void;
-}) {
+}) => {
   const [cyclingDisplay, setCyclingDisplay] = useState("?");
   const onSettledRef = useRef(onSettled);
 
@@ -271,9 +271,9 @@ function RollingNumber({
       {display}
     </span>
   );
-}
+};
 
-function DieWithNumber({
+const DieWithNumber = ({
   sides,
   finalValue,
   rolling,
@@ -283,7 +283,7 @@ function DieWithNumber({
   finalValue: number;
   rolling: boolean;
   onLanded?: () => void;
-}) {
+}) => {
   const [dieLanded, setDieLanded] = useState(!rolling);
   const [prevRolling, setPrevRolling] = useState(rolling);
 
@@ -327,9 +327,9 @@ function DieWithNumber({
       )}
     </div>
   );
-}
+};
 
-export default function DiceRoller({ steps, onComplete }: DiceRollerProps) {
+const DiceRoller = ({ steps, onComplete }: DiceRollerProps) => {
   const [activeStep, setActiveStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(
     new Set()
@@ -387,6 +387,8 @@ export default function DiceRoller({ steps, onComplete }: DiceRollerProps) {
       </div>
     </div>
   );
-}
+};
+
+export default DiceRoller;
 
 export type { DiceStep };

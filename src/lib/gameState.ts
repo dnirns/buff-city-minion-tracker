@@ -10,7 +10,7 @@ export interface GameSummary {
   createdAt: number;
 }
 
-export function getSavedGames(): GameSummary[] {
+export const getSavedGames = (): GameSummary[] => {
   if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -19,33 +19,33 @@ export function getSavedGames(): GameSummary[] {
   } catch {
     return [];
   }
-}
+};
 
-export function saveGame(gameName: string, slug: string): void {
+export const saveGame = (gameName: string, slug: string): void => {
   if (typeof window === "undefined") return;
   const games = getSavedGames();
   const existing = games.find((g) => g.slug === slug);
   if (existing) return;
   games.push({ gameName, slug, createdAt: Date.now() });
   localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
-}
+};
 
-export function deleteGame(slug: string): void {
+export const deleteGame = (slug: string): void => {
   if (typeof window === "undefined") return;
   const games = getSavedGames().filter((g) => g.slug !== slug);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(games));
   localStorage.removeItem(`${GAME_STATE_PREFIX}${slug}`);
-}
+};
 
-export function getGameBySlug(slug: string): GameSummary | null {
+export const getGameBySlug = (slug: string): GameSummary | null => {
   return getSavedGames().find((g) => g.slug === slug) ?? null;
-}
+};
 
-function gameStateKey(slug: string): string {
+const gameStateKey = (slug: string): string => {
   return `${GAME_STATE_PREFIX}${slug}`;
-}
+};
 
-export function getGameState(slug: string): GameState | null {
+export const getGameState = (slug: string): GameState | null => {
   if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(gameStateKey(slug));
@@ -54,14 +54,14 @@ export function getGameState(slug: string): GameState | null {
   } catch {
     return null;
   }
-}
+};
 
-export function saveGameState(state: GameState): void {
+export const saveGameState = (state: GameState): void => {
   if (typeof window === "undefined") return;
   localStorage.setItem(gameStateKey(state.slug), JSON.stringify(state));
-}
+};
 
-export function initGameState(gameName: string, slug: string): GameState {
+export const initGameState = (gameName: string, slug: string): GameState => {
   const existing = getGameState(slug);
   if (existing) {
     const needsMigration = existing.enemies.some((e) => !e.displayName);
@@ -85,4 +85,4 @@ export function initGameState(gameName: string, slug: string): GameState {
   };
   saveGameState(state);
   return state;
-}
+};
