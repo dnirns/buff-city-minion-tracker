@@ -1,18 +1,5 @@
-import type { EnemyNumberCounters, EnemyType, GameState } from "./types";
-
-const TYPE_DISPLAY: Record<EnemyType, string> = {
-  Goon: "Goon",
-  Henchman: "Henchman",
-  Lieutenant: "Lieutenant",
-  UniqueCitizen: "Unique Citizen",
-};
-
-const INITIAL_ENEMY_NUMBERS: EnemyNumberCounters = {
-  Goon: 0,
-  Henchman: 0,
-  Lieutenant: 0,
-  UniqueCitizen: 0,
-};
+import type { GameState } from "./types";
+import { TYPE_DISPLAY, INITIAL_ENEMY_NUMBERS } from "./constants";
 
 const STORAGE_KEY = "bcw-games";
 const GAME_STATE_PREFIX = "bcw-game-";

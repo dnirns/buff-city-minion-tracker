@@ -12,25 +12,11 @@ import EnemyCard from '@/components/EnemyCard/EnemyCard'
 import DiceRoller, { type DiceStep } from '@/components/DiceRoller/DiceRoller'
 import Button from '@/components/Button/Button'
 import DefeatAnimation from '@/components/DefeatAnimation/DefeatAnimation'
+import { TYPE_DISPLAY, INTENT_DISPLAY, INITIAL_ENEMY_NUMBERS, MAX_TURN } from '@/lib/constants'
 import styles from './page.module.css'
 
 interface GamePageProps {
   params: Promise<{ slug: string }>
-}
-
-const INTENT_DISPLAY: Record<string, string> = {
-  Combat: 'Combat',
-  Slam: 'Slam',
-  BuffTokenDenial: 'Buff Token Denial',
-  EvasiveManoeuvres: 'Evasive Manoeuvres',
-  CommandingOrders: 'Commanding Orders',
-}
-
-const TYPE_DISPLAY: Record<string, string> = {
-  Goon: 'Goon',
-  Henchman: 'Henchman',
-  Lieutenant: 'Lieutenant',
-  UniqueCitizen: 'Unique Citizen',
 }
 
 type GameAction =
@@ -56,7 +42,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return action.state
 
     case 'ADVANCE_TURN': {
-      if (state.turn >= 10) return state
+      if (state.turn >= MAX_TURN) return state
       return { ...state, turn: (state.turn + 1) as TurnNumber }
     }
 
@@ -136,7 +122,7 @@ const INITIAL_STATE: GameState = {
   turn: 1,
   lieutenantSpawned: false,
   uniqueCitizenSpawned: false,
-  enemyNumbers: { Goon: 0, Henchman: 0, Lieutenant: 0, UniqueCitizen: 0 },
+  enemyNumbers: { ...INITIAL_ENEMY_NUMBERS },
   enemies: [],
 }
 
@@ -179,7 +165,7 @@ export default function GamePage({ params }: GamePageProps) {
   }, [state, game])
 
   const handleSpawn = useCallback(() => {
-    if (state.turn === 10) return
+    if (state.turn === MAX_TURN) return
 
     const result = performSpawn({
       turn: state.turn,
@@ -396,7 +382,7 @@ export default function GamePage({ params }: GamePageProps) {
           &larr;
         </Button>
         <span className={styles.turnLabel}>Turn {state.turn}</span>
-        <Button variant='secondary' disabled={state.turn >= 10} onClick={() => dispatch({ type: 'ADVANCE_TURN' })}>
+        <Button variant='secondary' disabled={state.turn >= MAX_TURN} onClick={() => dispatch({ type: 'ADVANCE_TURN' })}>
           &rarr;
         </Button>
       </div>
@@ -404,10 +390,10 @@ export default function GamePage({ params }: GamePageProps) {
       <Button
         fullWidth
         className={styles.spawnButton}
-        disabled={state.turn === 10 || pendingSpawn !== null}
+        disabled={state.turn === MAX_TURN || pendingSpawn !== null}
         onClick={handleSpawn}
       >
-        {state.turn === 10 ? 'No Spawns on Turn 10' : 'Activate Buff Token'}
+        {state.turn === MAX_TURN ? `No Spawns on Turn ${MAX_TURN}` : 'Activate Buff Token'}
       </Button>
 
       {pendingDefeatId &&

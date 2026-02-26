@@ -8,6 +8,7 @@ import type {
 import { rollD4, rollD6, rollD12 } from "./dice";
 import { lookupSpawnType } from "./spawnTable";
 import { lookupIntent } from "./intentTable";
+import { TYPE_DISPLAY } from "./constants";
 
 interface BaseStats {
   strike: number;
@@ -52,13 +53,6 @@ const STANDARD_STATS: BaseStats = {
   range: 4,
   energy: 6,
   damage: 0,
-};
-
-const TYPE_DISPLAY: Record<EnemyType, string> = {
-  Goon: "Goon",
-  Henchman: "Henchman",
-  Lieutenant: "Lieutenant",
-  UniqueCitizen: "Unique Citizen",
 };
 
 const BASE_STATS: Record<EnemyType, BaseStats> = {

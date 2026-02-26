@@ -1,24 +1,10 @@
 import { useState } from "react";
-import type { Enemy, Intent, TurnNumber } from "@/lib/types";
+import type { Enemy, TurnNumber } from "@/lib/types";
 import { getIntentBehaviour } from "@/lib/intentBehaviour";
+import { TYPE_DISPLAY, INTENT_DISPLAY, STAT_LABELS } from "@/lib/constants";
 import Button from "@/components/Button/Button";
 import RenameModal from "@/components/RenameModal/RenameModal";
 import styles from "./EnemyCard.module.css";
-
-const TYPE_DISPLAY: Record<string, string> = {
-  Goon: "Goon",
-  Henchman: "Henchman",
-  Lieutenant: "Lieutenant",
-  UniqueCitizen: "Unique Citizen",
-};
-
-const INTENT_DISPLAY: Record<Intent, string> = {
-  Combat: "Combat",
-  Slam: "Slam",
-  BuffTokenDenial: "Buff Token Denial",
-  EvasiveManoeuvres: "Evasive Manoeuvres",
-  CommandingOrders: "Commanding Orders",
-};
 
 type StatName = "strike" | "condition" | "agility" | "range" | "energy" | "damage" | "ready";
 
@@ -249,13 +235,7 @@ export default function EnemyCard({
           ) : (
             <>
               <div className={styles.staticStatsRow}>
-                {([
-                  { label: "STR", stat: "strike" as StatName },
-                  { label: "AGI", stat: "agility" as StatName },
-                  { label: "RNG", stat: "range" as StatName },
-                  { label: "ENG", stat: "energy" as StatName },
-                  { label: "DMG", stat: "damage" as StatName },
-                ]).map(({ label, stat }) => (
+                {STAT_LABELS.map(({ label, stat }) => (
                   <div key={stat} className={styles.trackerItem}>
                     <span className={styles.statLabel}>{label}</span>
                     <div className={styles.statEditable}>
