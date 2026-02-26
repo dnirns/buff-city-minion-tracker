@@ -8,7 +8,7 @@ import Button from '@/components/Button/Button'
 import { getSavedGames, deleteGame, type GameSummary } from '@/lib/gameState'
 import styles from './page.module.css'
 
-export default function Home() {
+const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [savedGames, setSavedGames] = useState<GameSummary[]>([])
 
@@ -16,12 +16,12 @@ export default function Home() {
     setSavedGames(getSavedGames())
   }, [])
 
-  function handleModalClose() {
+  const handleModalClose = () => {
     setIsModalOpen(false)
     setSavedGames(getSavedGames())
   }
 
-  function handleDelete(slug: string, gameName: string) {
+  const handleDelete = (slug: string, gameName: string) => {
     if (!confirm(`Delete "${gameName}"? This cannot be undone.`)) return
     deleteGame(slug)
     setSavedGames(getSavedGames())
@@ -69,3 +69,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Home

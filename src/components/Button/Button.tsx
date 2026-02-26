@@ -8,12 +8,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
 }
 
-export default function Button({
+const Button = ({
   variant = "primary",
   fullWidth = false,
   className,
   ...props
-}: ButtonProps) {
+}: ButtonProps) => {
   const classes = [
     styles.button,
     styles[variant],
@@ -24,4 +24,6 @@ export default function Button({
     .join(" ");
 
   return <button className={classes} {...props} />;
-}
+};
+
+export default Button;

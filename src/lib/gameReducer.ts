@@ -20,7 +20,7 @@ export type GameAction =
   | { type: 'REVIVE_ENEMY'; enemyId: string }
   | { type: 'RENAME_ENEMY'; enemyId: string; displayName: string }
 
-export function gameReducer(state: GameState, action: GameAction): GameState {
+export const gameReducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
     case 'LOAD':
       return action.state
@@ -97,7 +97,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     default:
       return state
   }
-}
+};
 
 export const INITIAL_STATE: GameState = {
   gameName: '',

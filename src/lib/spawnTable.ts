@@ -18,13 +18,13 @@ const SPAWN_TABLE: Record<TurnNumber, SpawnRange | null> = {
   10: null,
 };
 
-export function lookupSpawnType(
+export const lookupSpawnType = (
   turn: TurnNumber,
   d12Roll: number
-): EnemyType | null {
+): EnemyType | null => {
   const range = SPAWN_TABLE[turn];
   if (range === null) return null;
   if (d12Roll <= range.goonMax) return "Goon";
   if (d12Roll <= range.henchmanMax) return "Henchman";
   return "Lieutenant";
-}
+};

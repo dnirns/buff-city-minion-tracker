@@ -8,7 +8,7 @@ interface RenameModalProps {
   onClose: () => void;
 }
 
-export default function RenameModal({ currentName, onSave, onClose }: RenameModalProps) {
+const RenameModal = ({ currentName, onSave, onClose }: RenameModalProps) => {
   const [name, setName] = useState(currentName);
 
   const inputCallbackRef = useCallback((node: HTMLInputElement | null) => {
@@ -18,13 +18,13 @@ export default function RenameModal({ currentName, onSave, onClose }: RenameModa
     }
   }, []);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const trimmed = name.trim();
     if (trimmed) {
       onSave(trimmed);
     }
-  }
+  };
 
   return (
     <div className={styles.backdrop} onClick={onClose}>
@@ -53,4 +53,6 @@ export default function RenameModal({ currentName, onSave, onClose }: RenameModa
       </div>
     </div>
   );
-}
+};
+
+export default RenameModal;

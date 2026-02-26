@@ -98,9 +98,9 @@ const UC_COMMANDING_ORDERS: IntentBehaviour = {
   ],
 };
 
-export function getIntentBehaviour(intent: Intent, enemyType?: EnemyType): IntentBehaviour {
+export const getIntentBehaviour = (intent: Intent, enemyType?: EnemyType): IntentBehaviour => {
   if (intent === "CommandingOrders" && enemyType === "UniqueCitizen") {
     return UC_COMMANDING_ORDERS;
   }
   return INTENT_BEHAVIOURS[intent];
-}
+};

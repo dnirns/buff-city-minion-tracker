@@ -26,7 +26,7 @@ interface PendingSpawn {
   steps: DiceStep[]
 }
 
-export default function GamePage({ params }: GamePageProps) {
+const GamePage = ({ params }: GamePageProps) => {
   const { slug } = use(params)
 
   const [game, setGame] = useState<ReturnType<typeof getGameBySlug> | undefined>(undefined)
@@ -332,3 +332,5 @@ export default function GamePage({ params }: GamePageProps) {
     </div>
   )
 }
+
+export default GamePage

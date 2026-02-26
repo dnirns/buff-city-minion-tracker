@@ -12,7 +12,7 @@ interface DefeatAnimationProps {
   onComplete: () => void
 }
 
-export default function DefeatAnimation({ enemyName, enemyType, onComplete }: DefeatAnimationProps) {
+const DefeatAnimation = ({ enemyName, enemyType, onComplete }: DefeatAnimationProps) => {
   const onCompleteRef = useRef(onComplete)
 
   useEffect(() => {
@@ -43,4 +43,6 @@ export default function DefeatAnimation({ enemyName, enemyType, onComplete }: De
       </div>
     </div>
   )
-}
+};
+
+export default DefeatAnimation;

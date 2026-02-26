@@ -3,7 +3,7 @@
 import Link from "next/link";
 import styles from "./page.module.css";
 
-export default function HomeError() {
+const HomeError = () => {
   return (
     <div className={styles.errorPage}>
       <h1>Something went wrong</h1>
@@ -13,4 +13,6 @@ export default function HomeError() {
       </Link>
     </div>
   );
-}
+};
+
+export default HomeError;

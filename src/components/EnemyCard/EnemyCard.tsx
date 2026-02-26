@@ -26,7 +26,7 @@ interface EnemyCardProps {
   spawnPending: boolean;
 }
 
-export default function EnemyCard({
+const EnemyCard = ({
   enemy,
   currentTurn,
   onUpdateStat,
@@ -38,7 +38,7 @@ export default function EnemyCard({
   onRevive,
   activeNonUC,
   spawnPending,
-}: EnemyCardProps) {
+}: EnemyCardProps) => {
   const [renameOpen, setRenameOpen] = useState(false);
 
   const defaultName = `${TYPE_DISPLAY[enemy.type]} ${enemy.number}`;
@@ -308,4 +308,6 @@ export default function EnemyCard({
       )}
     </div>
   );
-}
+};
+
+export default EnemyCard;
