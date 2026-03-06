@@ -8,8 +8,6 @@ https://blok-warz-minion-tracker.vercel.app/
 
 This tool automates the dice-driven spawning logic for Goons, Henchmen, Lieutenants, and the Unique Citizen, letting you focus on playing the game rather than juggling rulebook tables and tracking stats on paper.
 
-> **Note:** This is an unofficial fan-made tool. Buff This – Blok Warz is designed and published by Macharian Rising / Protagonist Games.
-
 ## What It Does
 
 When a Buff Token is activated during a game, the app rolls virtual dice against the official spawn tables to determine the enemy type (based on the current turn), board edge deployment, and combat intent. Each spawned enemy is rendered as an interactive card displaying its S.C.A.R.E.D. stats (Strike, Condition, Agility, Range, Energy, Damage) along with a Ready tracker. Stats can be adjusted on the fly as the game progresses, and defeated enemies can be removed from the active board.
