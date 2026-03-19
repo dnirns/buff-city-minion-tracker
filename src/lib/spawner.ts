@@ -172,6 +172,7 @@ export const createEnemy = (result: SpawnResult, turn: TurnNumber, enemyNumber: 
     intent: result.intent,
     spawnedOnTurn: turn,
     defeated: false,
+    activated: false,
     ...stats,
     ready: 0,
   };

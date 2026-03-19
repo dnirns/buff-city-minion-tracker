@@ -19,6 +19,7 @@ const makeEnemy = (overrides: Partial<Enemy> = {}): Enemy => ({
   intent: "Combat",
   spawnedOnTurn: 1,
   defeated: false,
+  activated: false,
   strike: 0,
   condition: 6,
   agility: 0,
@@ -53,6 +54,19 @@ describe("gameReducer", () => {
       const state = { ...INITIAL_STATE, turn: 10 as TurnNumber };
       const result = gameReducer(state, { type: "ADVANCE_TURN" });
       expect(result.turn).toBe(10);
+    });
+
+    it("resets all enemies' activated to false", () => {
+      const state: GameState = {
+        ...INITIAL_STATE,
+        enemies: [
+          makeEnemy({ id: "test-1", activated: true }),
+          makeEnemy({ id: "test-2", number: 2, activated: false }),
+        ],
+      };
+      const result = gameReducer(state, { type: "ADVANCE_TURN" });
+      expect(result.enemies[0].activated).toBe(false);
+      expect(result.enemies[1].activated).toBe(false);
     });
   });
 
@@ -180,6 +194,30 @@ describe("gameReducer", () => {
       const state = stateWithEnemy();
       const result = gameReducer(state, { type: "RENAME_ENEMY", enemyId: "test-1", displayName: "Big Boss" });
       expect(result.enemies[0].displayName).toBe("Big Boss");
+    });
+  });
+
+  describe("TOGGLE_ACTIVATED", () => {
+    it("toggles activated from false to true", () => {
+      const state = stateWithEnemy();
+      const result = gameReducer(state, { type: "TOGGLE_ACTIVATED", enemyId: "test-1" });
+      expect(result.enemies[0].activated).toBe(true);
+    });
+
+    it("toggles activated from true to false", () => {
+      const state = stateWithEnemy({ activated: true });
+      const result = gameReducer(state, { type: "TOGGLE_ACTIVATED", enemyId: "test-1" });
+      expect(result.enemies[0].activated).toBe(false);
+    });
+
+    it("does not affect other enemies", () => {
+      const state: GameState = {
+        ...INITIAL_STATE,
+        enemies: [makeEnemy({ id: "test-1" }), makeEnemy({ id: "test-2", number: 2 })],
+      };
+      const result = gameReducer(state, { type: "TOGGLE_ACTIVATED", enemyId: "test-1" });
+      expect(result.enemies[0].activated).toBe(true);
+      expect(result.enemies[1].activated).toBe(false);
     });
   });
 

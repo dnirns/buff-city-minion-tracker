@@ -128,9 +128,10 @@ describe("createEnemy", () => {
     expect(enemy.displayName).toBe("Goon 3");
   });
 
-  it("sets defeated to false and ready to 0", () => {
+  it("sets defeated to false, activated to false, and ready to 0", () => {
     const enemy = createEnemy(spawnResult, 1, 1);
     expect(enemy.defeated).toBe(false);
+    expect(enemy.activated).toBe(false);
     expect(enemy.ready).toBe(0);
   });
 

@@ -19,6 +19,7 @@ export type GameAction =
   | { type: 'SET_INTENT'; enemyId: string; intent: Intent }
   | { type: 'REVIVE_ENEMY'; enemyId: string }
   | { type: 'RENAME_ENEMY'; enemyId: string; displayName: string }
+  | { type: 'TOGGLE_ACTIVATED'; enemyId: string }
 
 export const gameReducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
@@ -27,7 +28,11 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
 
     case 'ADVANCE_TURN': {
       if (state.turn >= MAX_TURN) return state
-      return { ...state, turn: (state.turn + 1) as TurnNumber }
+      return {
+        ...state,
+        turn: (state.turn + 1) as TurnNumber,
+        enemies: state.enemies.map((e) => ({ ...e, activated: false })),
+      }
     }
 
     case 'RETREAT_TURN': {
@@ -92,6 +97,14 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
       return {
         ...state,
         enemies: state.enemies.map((e) => (e.id === action.enemyId ? { ...e, displayName: action.displayName } : e)),
+      }
+
+    case 'TOGGLE_ACTIVATED':
+      return {
+        ...state,
+        enemies: state.enemies.map((e) =>
+          e.id === action.enemyId ? { ...e, activated: !e.activated } : e
+        ),
       }
 
     default:

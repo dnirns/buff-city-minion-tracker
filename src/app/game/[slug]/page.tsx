@@ -138,6 +138,10 @@ const GamePage = ({ params }: GamePageProps) => {
     dispatch({ type: 'RENAME_ENEMY', enemyId, displayName })
   }, [])
 
+  const handleToggleActivated = useCallback((enemyId: string) => {
+    dispatch({ type: 'TOGGLE_ACTIVATED', enemyId })
+  }, [])
+
   const handleRerollIntent = useCallback((enemyId: string) => {
     dispatch({ type: 'REROLL_INTENT', enemyId })
   }, [])
@@ -323,6 +327,7 @@ const GamePage = ({ params }: GamePageProps) => {
               onRerollIntentForEnemy={handleRerollIntentForEnemy}
               onRename={handleRename}
               onRevive={handleRevive}
+              onToggleActivated={handleToggleActivated}
               activeNonUC={activeNonUC}
               spawnPending={pendingSpawn !== null}
             />

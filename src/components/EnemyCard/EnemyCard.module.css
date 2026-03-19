@@ -63,15 +63,46 @@
   color: #888;
 }
 
+.activationBadge {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 4px 10px;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.4;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.activationBadge:hover {
+  border-color: #aaa;
+  color: #aaa;
+}
+
+.activationBadge.activated {
+  color: #fff;
+  border-color: #e8a030;
+  background: rgba(232, 160, 48, 0.35);
+}
+
+.activationBadge.activated:hover {
+  background: rgba(232, 160, 48, 0.45);
+}
+
 .spawnedBadge {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #4a9;
   border: 1px solid #4a9;
   border-radius: 4px;
-  padding: 1px 6px;
+  padding: 4px 10px;
 }
 
 .intentRow {

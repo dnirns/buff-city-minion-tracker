@@ -13,6 +13,7 @@ const makeEnemy = (overrides: Partial<Enemy> = {}): Enemy => ({
   intent: "Combat",
   spawnedOnTurn: 1,
   defeated: false,
+  activated: false,
   strike: 3,
   condition: 4,
   agility: 2,
@@ -33,6 +34,7 @@ const defaultProps = () => ({
   onCommandingOrders: vi.fn(),
   onRerollIntentForEnemy: vi.fn(),
   onRevive: vi.fn(),
+  onToggleActivated: vi.fn(),
   activeNonUC: [] as Enemy[],
   spawnPending: false,
 });
@@ -416,6 +418,44 @@ describe("EnemyCard", () => {
 
       expect(screen.getByRole("button", { name: "Lieutenant 1" })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: "Goon 1" })).toBeInTheDocument();
+    });
+  });
+
+  describe("activation marker", () => {
+    it("shows activation badge for active enemies", () => {
+      render(<EnemyCard {...defaultProps()} />);
+      expect(screen.getByLabelText("Mark as activated")).toBeInTheDocument();
+    });
+
+    it("shows inactive state by default", () => {
+      render(<EnemyCard {...defaultProps()} />);
+      expect(screen.getByLabelText("Mark as activated")).toHaveAttribute("aria-pressed", "false");
+    });
+
+    it("calls onToggleActivated when badge is clicked", async () => {
+      const user = userEvent.setup();
+      const props = defaultProps();
+      render(<EnemyCard {...props} />);
+
+      await user.click(screen.getByLabelText("Mark as activated"));
+      expect(props.onToggleActivated).toHaveBeenCalledWith("enemy-1");
+    });
+
+    it("shows activated state when enemy.activated is true", () => {
+      const props = defaultProps();
+      props.enemy = makeEnemy({ activated: true });
+      render(<EnemyCard {...props} />);
+
+      expect(screen.getByLabelText("Mark as not activated")).toHaveAttribute("aria-pressed", "true");
+    });
+
+    it("does not show activation badge for defeated enemies", () => {
+      const props = defaultProps();
+      props.enemy = makeEnemy({ defeated: true });
+      render(<EnemyCard {...props} />);
+
+      expect(screen.queryByLabelText("Mark as activated")).not.toBeInTheDocument();
+      expect(screen.queryByLabelText("Mark as not activated")).not.toBeInTheDocument();
     });
   });
 

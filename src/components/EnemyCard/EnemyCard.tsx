@@ -22,6 +22,7 @@ interface EnemyCardProps {
   onCommandingOrders: (enemyId: string) => void;
   onRerollIntentForEnemy: (targetId: string) => void;
   onRevive: (enemyId: string) => void;
+  onToggleActivated: (enemyId: string) => void;
   activeNonUC: Enemy[];
   spawnPending: boolean;
 }
@@ -36,6 +37,7 @@ const EnemyCard = ({
   onCommandingOrders,
   onRerollIntentForEnemy,
   onRevive,
+  onToggleActivated,
   activeNonUC,
   spawnPending,
 }: EnemyCardProps) => {
@@ -80,6 +82,16 @@ const EnemyCard = ({
           )}
         </div>
         <div className={styles.topRowRight}>
+          {!enemy.defeated && (
+            <button
+              className={`${styles.activationBadge} ${enemy.activated ? styles.activated : ''}`}
+              onClick={() => onToggleActivated(enemy.id)}
+              aria-label={enemy.activated ? 'Mark as not activated' : 'Mark as activated'}
+              aria-pressed={enemy.activated}
+            >
+              {enemy.activated ? 'Activated' : 'Activate'}
+            </button>
+          )}
           {justSpawned && (
             <span className={styles.spawnedBadge}>New</span>
           )}

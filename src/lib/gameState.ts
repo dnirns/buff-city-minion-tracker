@@ -64,10 +64,17 @@ export const saveGameState = (state: GameState): void => {
 export const initGameState = (gameName: string, slug: string): GameState => {
   const existing = getGameState(slug);
   if (existing) {
-    const needsMigration = existing.enemies.some((e) => !e.displayName);
-    if (needsMigration) {
+    const needsDisplayNameMigration = existing.enemies.some((e) => !e.displayName);
+    if (needsDisplayNameMigration) {
       existing.enemies = existing.enemies.map((e) =>
         e.displayName ? e : { ...e, displayName: `${TYPE_DISPLAY[e.type]} ${e.number}` }
+      );
+      saveGameState(existing);
+    }
+    const needsActivatedMigration = existing.enemies.some((e) => e.activated === undefined);
+    if (needsActivatedMigration) {
+      existing.enemies = existing.enemies.map((e) =>
+        e.activated !== undefined ? e : { ...e, activated: false }
       );
       saveGameState(existing);
     }

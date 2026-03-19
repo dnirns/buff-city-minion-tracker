@@ -20,6 +20,7 @@ export interface Enemy {
   intent: Intent;
   spawnedOnTurn: TurnNumber;
   defeated: boolean;
+  activated: boolean;
   strike: number;
   condition: number;
   agility: number;
